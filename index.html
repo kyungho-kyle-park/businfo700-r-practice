@@ -52,6 +52,13 @@
       cursor: pointer; outline: none;
     }
     #lab-select option { background: #003865; color: white; }
+    #set-select {
+      background: rgba(255,255,255,0.12); color: white;
+      border: 1px solid rgba(255,255,255,0.3); border-radius: 5px;
+      padding: 5px 10px; font-size: 0.88em; font-weight: 600;
+      cursor: pointer; outline: none;
+    }
+    #set-select option { background: #003865; color: white; }
 
     /* ── Layout ── */
     .layout { display: flex; flex: 1; overflow: hidden; }
@@ -220,7 +227,10 @@
 
 <header>
   <h1>BUSINFO 700 · R Practice</h1>
-  <select id="lab-select" onchange="switchLab(this.value)"></select>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <select id="lab-select" onchange="switchLab(this.value)"></select>
+    <select id="set-select" onchange="switchSet(this.value)"></select>
+  </div>
   <span class="sub">Kyungho Kyle Park</span>
 </header>
 
@@ -270,7 +280,8 @@ import { WebR } from 'https://webr.r-wasm.org/latest/webr.mjs';
 // To add a new lab: append an entry to LABS below.
 // ─────────────────────────────────────────────
 const LABS = {
-  'Lab 2: Data Manipulation': { steps: [
+  'Lab 2: Data Manipulation': {
+    'Set A: Auckland Café': { steps: [
   {
     id: 1, label: 'Create Data Frame',
     content: `
@@ -633,9 +644,12 @@ const LABS = {
       }
       if (ok) "PASS:  Bonus column looks correct!" else paste("FAIL:", paste(msg, collapse=" | "))`
   }
-  ]},
+    ]},
+  },
   // ── Add new labs below this line ──────────────────────────────────────────
-  // 'Lab 3: Visualization': { steps: [ ... ] },
+  // 'Lab 3: Visualization': {
+  //   'Set A: ...': { steps: [ ... ] },
+  // },
 };
 
 // ─────────────────────────────────────────────
@@ -643,8 +657,9 @@ const LABS = {
 // ─────────────────────────────────────────────
 const webR = new WebR();
 let currentLabKey = Object.keys(LABS)[0];
+let currentSetKey = Object.keys(LABS[currentLabKey])[0];
 let currentStep   = 0;
-const completed   = {};  // { labKey: Set }
+const completed   = {};  // { labKey: { setKey: Set } }
 
 async function init() {
   const msg = document.getElementById('loading-msg');
@@ -670,6 +685,7 @@ async function init() {
   `);
   document.getElementById('loading').style.display = 'none';
   buildLabSelect();
+  buildSetSelect(currentLabKey);
   buildNav();
   showStep(0);
 }
@@ -687,8 +703,28 @@ function buildLabSelect() {
   });
 }
 
+function buildSetSelect(labKey) {
+  const sel = document.getElementById('set-select');
+  sel.innerHTML = '';
+  Object.keys(LABS[labKey]).forEach(key => {
+    const opt = document.createElement('option');
+    opt.value = key;
+    opt.textContent = key;
+    sel.appendChild(opt);
+  });
+}
+
 function switchLab(key) {
   currentLabKey = key;
+  currentStep   = 0;
+  buildSetSelect(key);
+  currentSetKey = Object.keys(LABS[key])[0];
+  buildNav();
+  showStep(0);
+}
+
+function switchSet(key) {
+  currentSetKey = key;
   currentStep   = 0;
   buildNav();
   showStep(0);
@@ -697,11 +733,12 @@ function switchLab(key) {
 function buildNav() {
   const nav = document.getElementById('step-nav');
   nav.innerHTML = '';
-  const steps = LABS[currentLabKey].steps;
-  if (!completed[currentLabKey]) completed[currentLabKey] = new Set();
+  const steps = LABS[currentLabKey][currentSetKey].steps;
+  if (!completed[currentLabKey]) completed[currentLabKey] = {};
+  if (!completed[currentLabKey][currentSetKey]) completed[currentLabKey][currentSetKey] = new Set();
   steps.forEach((s, i) => {
     const li = document.createElement('li');
-    const isDone = completed[currentLabKey].has(i);
+    const isDone = completed[currentLabKey][currentSetKey].has(i);
     li.innerHTML = `
       <button onclick="showStep(${i})" id="nav-btn-${i}" class="${isDone ? 'done' : ''}">
         <span class="step-badge" id="badge-${i}">${s.id}</span>
@@ -714,13 +751,13 @@ function buildNav() {
 
 function showStep(index) {
   currentStep = index;
-  const steps = LABS[currentLabKey].steps;
   document.querySelectorAll('.step-nav button').forEach((b, i) => {
     b.classList.toggle('active', i === index);
   });
 
   const qContent  = document.getElementById('q-content');
   const qExpected = document.getElementById('q-expected');
+  const steps = LABS[currentLabKey][currentSetKey].steps;
   qContent.innerHTML  = steps[index].content;
   qExpected.innerHTML = '';
 
@@ -798,14 +835,14 @@ async function checkAnswer() {
   btn.textContent = '⏳';
   const cr = document.getElementById('check-result');
   try {
-    const steps = LABS[currentLabKey].steps;
+    const steps = LABS[currentLabKey][currentSetKey].steps;
     const result = await webR.evalR(steps[currentStep].check);
     const js = await result.toJs();
     const msg = js.values[0];
     if (msg.startsWith('PASS')) {
       cr.className = 'check-result pass';
       cr.textContent = '✓ ' + msg.replace('PASS:', '').trim();
-      completed[currentLabKey].add(currentStep);
+      completed[currentLabKey][currentSetKey].add(currentStep);
       document.getElementById(`tick-${currentStep}`).textContent = '✓';
       document.getElementById(`nav-btn-${currentStep}`).classList.add('done');
     } else {
@@ -837,6 +874,7 @@ document.getElementById('code-editor').addEventListener('keydown', e => {
 // expose globals
 window.showStep   = showStep;
 window.switchLab  = switchLab;
+window.switchSet  = switchSet;
 window.runCode    = runCode;
 window.checkAnswer = checkAnswer;
 window.resetEditor = resetEditor;
