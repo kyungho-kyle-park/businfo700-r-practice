@@ -54,39 +54,40 @@
 
 /* ── Light Theme ─────────────────────────────────────────────── */
 [data-theme="light"] {
-  --bg-base:       #eeeeff;
-  --bg-primary:    #f3f2ff;
+  --bg-base:       #f2f4f7;
+  --bg-primary:    #f7f8fa;
   --bg-surface:    #ffffff;
-  --bg-elevated:   #ebe8ff;
-  --bg-hover:      #ddd8ff;
-  --code-bg:       #f8f7ff;
-  --accent:        #FD4C44;
+  --bg-elevated:   #f0f1f4;
+  --bg-hover:      #e8eaee;
+  --code-bg:       #fafafa;
+  --violet:        #0c0c48;          /* UoA deep violet — buttons & UI */
+  --accent:        #FD4C44;          /* orange-red — primary CTA only */
   --accent-hover:  #e03030;
   --accent-dim:    rgba(253,76,68,0.1);
-  --accent-glow:   0 0 12px rgba(253,76,68,0.2);
+  --accent-glow:   0 0 10px rgba(253,76,68,0.18);
   --text-1:        #0c0c48;
-  --text-2:        #4040a0;
-  --text-3:        #8888cc;
-  --border:        #d0c8f0;
-  --border-soft:   #e4deff;
-  --shadow-sm:     0 2px 8px rgba(60,40,160,0.08);
-  --shadow-md:     0 4px 20px rgba(60,40,160,0.12);
-  --shadow-lg:     0 8px 40px rgba(60,40,160,0.16);
-  --pass-bg:       #d4f5e8;
+  --text-2:        #3a3a6a;
+  --text-3:        #888899;
+  --border:        #dde0e8;
+  --border-soft:   #ebedf2;
+  --shadow-sm:     0 1px 4px rgba(12,12,72,0.07);
+  --shadow-md:     0 4px 16px rgba(12,12,72,0.10);
+  --shadow-lg:     0 8px 32px rgba(12,12,72,0.13);
+  --pass-bg:       #e8f8ef;
   --pass-text:     #156830;
-  --fail-bg:       #ffe0e0;
+  --fail-bg:       #ffeaea;
   --fail-text:     #b01010;
-  --warn-bg:       #fff7e0;
-  --warn-text:     #886000;
-  --badge-r:       #daeeff;
-  --badge-r-t:     #1060a0;
-  --badge-x:       #f0e0ff;
-  --badge-x-t:     #7020b0;
-  --locked-bg:     #f0eeff;
-  --locked-text:   #9888cc;
+  --warn-bg:       #fffae8;
+  --warn-text:     #7a5500;
+  --badge-r:       #e8f3ff;
+  --badge-r-t:     #0c0c48;
+  --badge-x:       #f3e8ff;
+  --badge-x-t:     #5a1a90;
+  --locked-bg:     #f5f5fa;
+  --locked-text:   #aaaacc;
   --done-text:     #156830;
-  --scrollbar:     #c4bcec;
-  --header-section:#ece8ff;
+  --scrollbar:     #d0d2da;
+  --header-section:#f0f1f5;
 }
 
 /* ── Reset ───────────────────────────────────────────────────── */
@@ -604,4 +605,126 @@ body {
 @media (max-width: 500px) {
   .modal-box { width: 92vw; padding: 36px 22px; }
   .header-center { display: none; }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   LIGHT MODE OVERRIDES — White base + Deep Violet (#0C0C48) UI
+════════════════════════════════════════════════════════════════ */
+
+/* Header: white bg, violet bottom border */
+[data-theme="light"] .app-header {
+  background: #ffffff;
+  border-bottom: 2px solid #0c0c48;
+}
+[data-theme="light"] .brand-title { color: #0c0c48; }
+
+/* Course tabs: violet active */
+[data-theme="light"] .course-tab.active {
+  background: #0c0c48;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(12,12,72,0.3);
+}
+[data-theme="light"] .course-tabs {
+  background: #f0f1f5;
+  border-color: #dde0e8;
+}
+[data-theme="light"] .course-tab:not(.active):hover {
+  background: #e4e5ef;
+  color: #0c0c48;
+}
+
+/* Sidebar: white, violet active state */
+[data-theme="light"] .sidebar { background: #ffffff; border-right-color: #dde0e8; }
+[data-theme="light"] .week-header-label { color: #0c0c48; }
+[data-theme="light"] .q-item.active {
+  background: rgba(12,12,72,0.06);
+  border-color: rgba(12,12,72,0.25);
+}
+[data-theme="light"] .q-num-badge {
+  background: #f0f1f5;
+  border-color: #dde0e8;
+  color: #555577;
+}
+[data-theme="light"] .q-item.active .q-num-badge {
+  background: #0c0c48;
+  color: #ffffff;
+  border-color: #0c0c48;
+  box-shadow: 0 2px 8px rgba(12,12,72,0.3);
+}
+[data-theme="light"] .q-item.active .q-item-title { color: #0c0c48; font-weight: 700; }
+
+/* Panels: clean white with subtle shadow */
+[data-theme="light"] .scenario-panel,
+[data-theme="light"] .task-panel {
+  background: #ffffff;
+  border-color: #dde0e8;
+  box-shadow: 0 2px 12px rgba(12,12,72,0.07);
+}
+[data-theme="light"] .panel-header {
+  background: #0c0c48;
+  border-bottom-color: #0c0c48;
+}
+[data-theme="light"] .panel-icon  { filter: brightness(10); }
+[data-theme="light"] .panel-label { color: rgba(255,255,255,0.9); }
+
+/* Editor / Console section headers */
+[data-theme="light"] .editor-section,
+[data-theme="light"] .console-section { box-shadow: 0 2px 10px rgba(12,12,72,0.08); }
+[data-theme="light"] .editor-section  .section-header,
+[data-theme="light"] .console-section .section-header {
+  background: #0c0c48;
+  border-bottom-color: #0c0c48;
+}
+[data-theme="light"] .section-label { color: rgba(255,255,255,0.85); }
+[data-theme="light"] .section-label svg { stroke: rgba(255,255,255,0.7); }
+
+/* Ghost buttons inside dark headers */
+[data-theme="light"] .section-header .btn-ghost {
+  color: rgba(255,255,255,0.7);
+  border-color: rgba(255,255,255,0.25);
+  background: transparent;
+}
+[data-theme="light"] .section-header .btn-ghost:hover {
+  color: #ffffff;
+  border-color: rgba(255,255,255,0.6);
+  background: rgba(255,255,255,0.1);
+}
+
+/* Primary (Run) button stays orange-red */
+[data-theme="light"] .btn-primary { background: #FD4C44; color: #ffffff; }
+[data-theme="light"] .btn-primary:hover:not(:disabled) { background: #e03030; }
+
+/* Solution button: violet on hover */
+[data-theme="light"] .btn-solution:hover:not(.locked) {
+  color: #0c0c48;
+  border-color: #0c0c48;
+  background: rgba(12,12,72,0.05);
+}
+
+/* Modal top border → violet */
+[data-theme="light"] .modal-box { border-top-color: #0c0c48; }
+[data-theme="light"] #pwd-input:focus {
+  border-color: #0c0c48;
+  box-shadow: 0 0 0 3px rgba(12,12,72,0.12);
+}
+
+/* Q badge */
+[data-theme="light"] .q-badge { background: #f0f1f5; border-color: #dde0e8; color: #3a3a6a; }
+[data-theme="light"] .q-type-badge.r-type    { background: #e8f3ff; color: #0c0c48; }
+[data-theme="light"] .q-type-badge.excel-type { background: #f3e8ff; color: #5a1a90; }
+
+/* Icon button */
+[data-theme="light"] .icon-btn:hover { background: #f0f1f5; color: #0c0c48; }
+
+/* Solution panel green left border stays */
+[data-theme="light"] .solution-panel .section-header {
+  background: #f0faf5;
+  border-bottom-color: rgba(21,104,48,0.2);
+}
+[data-theme="light"] .solution-panel .section-label { color: #156830; }
+[data-theme="light"] .solution-panel .btn-ghost {
+  color: #156830; border-color: rgba(21,104,48,0.3); background: transparent;
+}
+[data-theme="light"] .solution-panel .btn-ghost:hover {
+  background: rgba(21,104,48,0.08); border-color: #156830;
 }
