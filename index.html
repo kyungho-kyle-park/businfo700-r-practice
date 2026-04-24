@@ -557,30 +557,81 @@ const LABS = {
       if (ok) "PASS:  Sorted correctly!" else paste("FAIL:", paste(msg, collapse=" | "))`
   },
   {
-    id: 'B', label: 'Bonus Challenge',
+    id: 'B1', label: 'Bonus 1: Filter',
     content: `
-      <h2><span class="q-num" style="background:var(--gold);">B</span> Bonus Challenge</h2>
-      <ol>
-        <li>Show only employees whose <code>Pay_Level</code> is <strong>"High"</strong> AND who are <strong>not</strong> Managers</li>
-        <li>Calculate the <strong>average</strong> <code>Weekly_Pay</code> across all employees</li>
-        <li>Add a <code>Bonus</code> column: <strong>10%</strong> of <code>Weekly_Pay</code> for Senior employees, <strong>5%</strong> for everyone else</li>
-      </ol>
-      <div class="exp-box"><strong>Expected average Weekly_Pay:</strong> 684.5</div>`,
+      <h2><span class="q-num" style="background:var(--gold);">B1</span> Bonus 1: Filter High-Pay Non-Managers</h2>
+      <p>Show only employees whose <code>Pay_Level</code> is <strong>"High"</strong> AND who are <strong>not</strong> Managers.</p>
+      <div class="exp-box"><strong>Expected output</strong><pre>  Name    Role Hourly_Rate Hours_Worked Weekly_Pay Annual_Pay Pay_Level Experience_Level
+3  Tane Barista          22           38        836      43472      High              Mid
+4 Priya Cashier          22           30        660      34320      High              Mid</pre>
+<em style="font-size:0.85em;color:#888;">(row numbers may vary depending on whether you sorted cafe in Step 9)</em></div>`,
     check: `
       ok <- TRUE; msg <- character(0)
-      if (!exists("cafe"))
-        { ok <- FALSE; msg <- c(msg, "cafe not found.") }
+      if (!exists("cafe")) { ok <- FALSE; msg <- c(msg, "cafe not found.") }
+      else {
+        pl <- names(cafe)[tolower(names(cafe)) == "pay_level"]
+        if (length(pl) == 0) { ok <- FALSE; msg <- c(msg, "Pay_Level column missing — complete Step 6 first.") }
+        else {
+          filtered <- cafe[as.character(cafe[[pl[1]]]) == "High" & as.character(cafe$Role) != "Manager", ]
+          n <- nrow(filtered)
+          if (n != 2) { ok <- FALSE; msg <- c(msg, paste0("Expected 2 rows (Tane & Priya), got ", n)) }
+          else if (!all(sort(as.character(filtered$Name)) == c("Priya", "Tane")))
+            { ok <- FALSE; msg <- c(msg, "Expected Tane and Priya in the result.") }
+        }
+      }
+      if (ok) "PASS:  Correct! Tane and Priya are the only High-pay non-managers." else paste("FAIL:", paste(msg, collapse=" | "))`
+  },
+  {
+    id: 'B2', label: 'Bonus 2: Average Pay',
+    content: `
+      <h2><span class="q-num" style="background:var(--gold);">B2</span> Bonus 2: Average Weekly Pay</h2>
+      <p>Calculate the <strong>average</strong> <code>Weekly_Pay</code> across all employees.</p>
+      <div class="exp-box"><strong>Expected output</strong><pre>[1] 851.1667</pre></div>`,
+    check: `
+      ok <- TRUE; msg <- character(0)
+      if (!exists("cafe")) { ok <- FALSE; msg <- c(msg, "cafe not found.") }
       else {
         wpc <- names(cafe)[tolower(names(cafe)) == "weekly_pay"]
-        if (length(wpc) > 0) {
+        if (length(wpc) == 0) { ok <- FALSE; msg <- c(msg, "Weekly_Pay column missing — complete Step 6 first.") }
+        else {
           avg <- mean(cafe[[wpc[1]]], na.rm = TRUE)
-          if (abs(avg - 684.5) > 0.5)
-            { ok <- FALSE; msg <- c(msg, paste0("Average Weekly_Pay: ", round(avg, 1), " (expected: 684.5)")) }
-        } else { ok <- FALSE; msg <- c(msg, "Weekly_Pay column missing.") }
-        if (!"Bonus" %in% names(cafe))
-          { ok <- FALSE; msg <- c(msg, "Bonus column missing.") }
+          if (abs(avg - 851.1667) > 1)
+            { ok <- FALSE; msg <- c(msg, paste0("mean(cafe$Weekly_Pay) = ", round(avg, 2), " (expected ~851.17)")) }
+        }
       }
-      if (ok) "PASS:  Bonus challenge complete!" else paste("FAIL:", paste(msg, collapse=" | "))`
+      if (ok) "PASS:  Correct! Average Weekly_Pay is $851.17." else paste("FAIL:", paste(msg, collapse=" | "))`
+  },
+  {
+    id: 'B3', label: 'Bonus 3: Bonus Column',
+    content: `
+      <h2><span class="q-num" style="background:var(--gold);">B3</span> Bonus 3: Add Bonus Column</h2>
+      <p>Add a <code>Bonus</code> column: <strong>10%</strong> of <code>Weekly_Pay</code> for Senior employees, <strong>5%</strong> for everyone else.</p>
+      <p>Then display <code>Name</code>, <code>Experience_Level</code>, <code>Weekly_Pay</code>, and <code>Bonus</code> to verify.</p>
+      <div class="exp-box"><strong>Expected output</strong><pre>    Name Experience_Level Weekly_Pay  Bonus
+1  Aroha           Senior       1400 140.00
+2 Connor           Senior       1386 138.60
+3   Tane              Mid        836  41.80
+4  Priya              Mid        660  33.00
+5    Mia           Junior        525  26.25
+6   Liam           Junior        300  15.00</pre></div>`,
+    check: `
+      ok <- TRUE; msg <- character(0)
+      if (!exists("cafe")) { ok <- FALSE; msg <- c(msg, "cafe not found.") }
+      else if (!"Bonus" %in% names(cafe))
+        { ok <- FALSE; msg <- c(msg, "Bonus column missing. Add it with mutate().") }
+      else {
+        elc <- names(cafe)[grepl("experience", tolower(names(cafe)))]
+        wpc <- names(cafe)[tolower(names(cafe)) == "weekly_pay"]
+        if (length(elc) > 0 && length(wpc) > 0) {
+          seniors <- cafe[as.character(cafe[[elc[1]]]) == "Senior", ]
+          others  <- cafe[as.character(cafe[[elc[1]]]) != "Senior", ]
+          senior_ok <- all(abs(seniors$Bonus - seniors[[wpc[1]]] * 0.1) < 0.01)
+          other_ok  <- all(abs(others$Bonus  - others[[wpc[1]]]  * 0.05) < 0.01)
+          if (!senior_ok) { ok <- FALSE; msg <- c(msg, "Senior bonus should be 10% of Weekly_Pay.") }
+          if (!other_ok)  { ok <- FALSE; msg <- c(msg, "Non-senior bonus should be 5% of Weekly_Pay.") }
+        } else { ok <- FALSE; msg <- c(msg, "Experience_Level or Weekly_Pay column missing.") }
+      }
+      if (ok) "PASS:  Bonus column looks correct!" else paste("FAIL:", paste(msg, collapse=" | "))`
   }
   ]},
   // ── Add new labs below this line ──────────────────────────────────────────
