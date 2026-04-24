@@ -1,885 +1,181 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BUSINFO 700 · R Practice</title>
-  <style>
-    :root {
-      --navy: #003865;
-      --gold: #F9A12E;
-      --light: #f4f8fc;
-      --border: #dde3eb;
-      --pass: #d4edda;
-      --pass-text: #155724;
-      --fail: #f8d7da;
-      --fail-text: #721c24;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; overflow: hidden; }
-    body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #1a1a1a; display: flex; flex-direction: column; }
-
-    /* ── Loading ── */
-    #loading {
-      position: fixed; inset: 0; background: var(--navy);
-      color: white; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; gap: 18px; z-index: 9999;
-    }
-    #loading h2 { font-size: 1.4em; }
-    #loading-msg { font-size: 0.9em; color: #aac4e0; }
-    .spinner {
-      width: 44px; height: 44px;
-      border: 4px solid rgba(255,255,255,0.2);
-      border-top-color: var(--gold);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ── Header ── */
-    header {
-      background: var(--navy); color: white;
-      padding: 11px 24px; display: flex;
-      justify-content: space-between; align-items: center;
-      flex-shrink: 0; border-bottom: 3px solid var(--gold);
-    }
-    header h1 { font-size: 1.05em; font-weight: 700; letter-spacing: 0.02em; }
-    header .sub { font-size: 0.82em; color: #aac4e0; }
-    #lab-select {
-      background: rgba(255,255,255,0.12); color: white;
-      border: 1px solid rgba(255,255,255,0.3); border-radius: 5px;
-      padding: 5px 10px; font-size: 0.88em; font-weight: 600;
-      cursor: pointer; outline: none;
-    }
-    #lab-select option { background: #003865; color: white; }
-    #set-select {
-      background: rgba(255,255,255,0.12); color: white;
-      border: 1px solid rgba(255,255,255,0.3); border-radius: 5px;
-      padding: 5px 10px; font-size: 0.88em; font-weight: 600;
-      cursor: pointer; outline: none;
-    }
-    #set-select option { background: #003865; color: white; }
-
-    /* ── Layout ── */
-    .layout { display: flex; flex: 1; overflow: hidden; }
-
-    /* ── Sidebar ── */
-    .sidebar {
-      width: 210px; background: white;
-      border-right: 1px solid var(--border);
-      display: flex; flex-direction: column;
-      flex-shrink: 0; overflow-y: auto;
-    }
-    .sidebar-title {
-      background: var(--navy); color: white;
-      padding: 10px 14px; font-size: 0.78em;
-      font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
-      flex-shrink: 0;
-    }
-    .step-nav { list-style: none; flex: 1; }
-    .step-nav li { border-bottom: 1px solid var(--border); }
-    .step-nav button {
-      width: 100%; text-align: left;
-      padding: 9px 12px; background: none; border: none;
-      cursor: pointer; font-size: 0.85em; color: #444;
-      display: flex; align-items: center; gap: 8px;
-    }
-    .step-nav button:hover { background: var(--light); }
-    .step-nav button.active { background: var(--light); border-left: 3px solid var(--navy); font-weight: 600; color: var(--navy); }
-    .step-badge {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 22px; height: 22px; background: #c5d3e0;
-      color: #003865; border-radius: 50%;
-      font-size: 0.78em; font-weight: 700; flex-shrink: 0;
-    }
-    .step-nav button.active .step-badge { background: var(--navy); color: white; }
-    .step-nav button.done .step-badge { background: #27ae60; color: white; }
-    .step-label { flex: 1; }
-    .tick { color: #27ae60; font-size: 0.85em; }
-
-    /* ── Main ── */
-    .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-
-    /* Question panel */
-    .question-panel {
-      background: white; border-bottom: 1px solid var(--border);
-      display: flex; flex-direction: row;
-      max-height: 44%; flex-shrink: 0; overflow: hidden;
-    }
-    .q-content {
-      flex: 0 0 60%; padding: 18px 20px 18px 24px;
-      overflow-y: auto; border-right: 1px solid var(--border);
-    }
-    .q-expected {
-      flex: 0 0 40%; padding: 16px 18px;
-      overflow-y: auto; background: #f8fafc;
-      display: flex; flex-direction: column; gap: 10px;
-    }
-    .q-expected-label {
-      font-size: 0.76em; font-weight: 700; color: #888;
-      text-transform: uppercase; letter-spacing: 0.07em;
-      margin-bottom: 2px;
-    }
-    .question-panel h2 {
-      color: var(--navy); font-size: 1.05em;
-      margin-bottom: 12px; display: flex;
-      align-items: center; gap: 10px;
-    }
-    .q-num {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 30px; height: 30px; background: var(--navy);
-      color: white; border-radius: 50%; font-weight: 700; font-size: 0.95em; flex-shrink: 0;
-    }
-    .question-panel p  { font-size: 1.05em; line-height: 1.65; margin-bottom: 8px; }
-    .question-panel ol,
-    .question-panel ul { font-size: 1.05em; line-height: 1.8; margin: 6px 0 6px 18px; }
-    .question-panel code {
-      background: #1a3a5c; color: #ffd580;
-      padding: 1px 5px; border-radius: 3px; font-size: 0.88em;
-    }
-
-    .exp-box {
-      background: #f0f4f8; border: 1px solid #b0c4d8;
-      border-radius: 5px; padding: 9px 13px;
-      margin-top: 10px; font-size: 0.83em; color: #2b4a6b;
-    }
-    .exp-box strong { color: var(--navy); display: block; margin-bottom: 4px; }
-    .exp-box pre { font-family: 'Courier New', monospace; overflow-x: auto; line-height: 1.55; }
-
-    .cond-table { border-collapse: collapse; font-size: 0.88em; margin: 8px 0; }
-    .cond-table th { background: var(--navy); color: white; padding: 5px 14px; text-align: left; }
-    .cond-table td { padding: 4px 14px; border-bottom: 1px solid #ddd; }
-
-    /* Dataset table */
-    .ds-table { border-collapse: collapse; font-size: 0.86em; margin: 8px 0; }
-    .ds-table th { background: var(--navy); color: white; padding: 5px 14px; text-align: left; }
-    .ds-table td { padding: 4px 14px; border-bottom: 1px solid #ddd; font-family: 'Courier New', monospace; }
-    .ds-table tr:nth-child(even) td { background: #f5f7fa; }
-    .ds-table td.err { color: #c0392b; font-weight: bold; }
-
-    /* ── Editor panel ── */
-    .editor-panel {
-      flex: 1; display: flex; flex-direction: column;
-      padding: 14px 20px; gap: 10px; overflow: hidden; min-height: 0;
-    }
-    .panel-label {
-      font-size: 0.76em; font-weight: 700;
-      color: #888; text-transform: uppercase; letter-spacing: 0.07em;
-    }
-
-    .editor-wrap { flex: 1; display: flex; flex-direction: column; min-height: 0; }
-    #code-editor {
-      flex: 1; font-family: 'Courier New', monospace; font-size: 0.88em;
-      padding: 11px 13px; border: 1px solid var(--border);
-      border-radius: 5px; resize: none;
-      background: #1e1e2e; color: #cdd6f4; line-height: 1.6;
-      tab-size: 2; min-height: 0;
-    }
-    #code-editor:focus { outline: 2px solid var(--gold); border-color: transparent; }
-
-    .btn-row { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
-    .btn {
-      padding: 7px 16px; border: none; border-radius: 5px;
-      cursor: pointer; font-size: 0.86em; font-weight: 600;
-      transition: opacity 0.15s, transform 0.1s;
-    }
-    .btn:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
-    .btn:disabled { opacity: 0.45; cursor: not-allowed; }
-    .btn-run    { background: var(--navy); color: white; }
-    .btn-check  { background: var(--gold); color: white; }
-    .btn-reset  { background: #e2e8f0; color: #555; }
-    .shortcut   { font-size: 0.76em; color: #aaa; margin-left: 4px; }
-
-    .output-wrap { flex: 1; display: flex; flex-direction: column; min-height: 0; }
-    #output {
-      background: #1e1e2e; color: #cdd6f4;
-      font-family: 'Courier New', monospace; font-size: 0.82em;
-      padding: 10px 13px; border-radius: 5px;
-      overflow-y: auto; flex: 1;
-      white-space: pre-wrap; word-break: break-word;
-      min-height: 60px;
-    }
-    .output-err { color: #f38ba8 !important; }
-
-    #check-result {
-      flex-shrink: 0; padding: 9px 13px;
-      border-radius: 5px; font-size: 0.87em; font-weight: 500;
-      display: none;
-    }
-    #check-result.pass { background: var(--pass); color: var(--pass-text); border: 1px solid #c3e6cb; display: block; }
-    #check-result.fail { background: var(--fail); color: var(--fail-text); border: 1px solid #f5c6cb; display: block; }
-
-    /* notice bar */
-    .notice {
-      background: #fff8e1; border-bottom: 1px solid #ffe082;
-      padding: 5px 20px; font-size: 0.8em; color: #795700;
-      flex-shrink: 0;
-    }
-  </style>
+  <meta name="robots" content="noindex, nofollow">
+  <title>Analytics Practice · BUSINFO 700/705</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/eclipse.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
 </head>
 <body>
 
-<div id="loading">
-  <div class="spinner"></div>
-  <h2>Setting up R environment...</h2>
-  <p id="loading-msg">Loading WebR...</p>
-</div>
-
-<header>
-  <h1>BUSINFO 700 · R Practice</h1>
-  <div style="display:flex;gap:8px;align-items:center;">
-    <select id="lab-select" onchange="switchLab(this.value)"></select>
-    <select id="set-select" onchange="switchSet(this.value)"></select>
+<!-- Password Modal -->
+<div id="pwd-modal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="modal-logo">🎓</div>
+    <h2>Analytics Practice</h2>
+    <p class="modal-sub">BUSINFO 700 · 705 &nbsp;·&nbsp; University of Auckland</p>
+    <form id="pwd-form">
+      <input type="password" id="pwd-input" placeholder="Enter password"
+             autocomplete="off" autocapitalize="off" spellcheck="false">
+      <button type="submit" class="btn-primary" style="justify-content:center">Unlock →</button>
+    </form>
+    <p id="pwd-error" class="error-msg"></p>
   </div>
-  <span class="sub">Kyungho Kyle Park</span>
-</header>
-
-<div class="notice">
-  dplyr, tidyr, ggplot2 and more are pre-loaded — no <code>library()</code> calls needed.
-  &nbsp;|&nbsp; <strong>Ctrl + Enter</strong> to run code
 </div>
 
-<div class="layout">
-
-  <nav class="sidebar">
-    <div class="sidebar-title">Steps</div>
-    <ul class="step-nav" id="step-nav"></ul>
-  </nav>
-
-  <div class="main">
-    <div class="question-panel">
-      <div class="q-content"  id="q-content"></div>
-      <div class="q-expected" id="q-expected"></div>
-    </div>
-    <div class="editor-panel">
-      <div class="editor-wrap">
-        <div class="panel-label">Your Code</div>
-        <textarea id="code-editor" spellcheck="false" placeholder="# Write your R code here...&#10;# Ctrl+Enter to run"></textarea>
-      </div>
-      <div class="btn-row">
-        <button class="btn btn-run"   id="btn-run"   onclick="runCode()">▶ Run</button>
-        <button class="btn btn-check" id="btn-check" onclick="checkAnswer()">✓ Check</button>
-        <button class="btn btn-reset" onclick="resetEditor()">↺ Reset</button>
-        <span class="shortcut">Ctrl+Enter to run</span>
-      </div>
-      <div class="output-wrap">
-        <div class="panel-label" style="margin-bottom:5px;">Output</div>
-        <div id="output">— run your code to see output —</div>
-      </div>
-      <div id="check-result"></div>
-    </div>
+<!-- Loading Screen -->
+<div id="loading-screen" class="loading-overlay hidden">
+  <div class="loading-content">
+    <div class="spinner"></div>
+    <h3>Initialising R Engine</h3>
+    <p id="load-status">Downloading WebAssembly R — first load takes 20–60s…</p>
   </div>
-
 </div>
 
-<script type="module">
-import { WebR } from 'https://webr.r-wasm.org/latest/webr.mjs';
+<!-- Main App -->
+<div id="app" class="app-shell hidden">
 
-// ─────────────────────────────────────────────
-// Lab definitions
-// To add a new lab: append an entry to LABS below.
-// ─────────────────────────────────────────────
-const LABS = {
-  'Lab 2: Data Manipulation': {
-    'Set A: Auckland Café': { steps: [
-  {
-    id: 1, label: 'Create Data Frame',
-    content: `
-      <h2><span class="q-num">1</span> Create the Data Frame from Scratch</h2>
-      <p>Using the dataset below, create a data frame called <code>cafe</code>.</p>
-      <table class="ds-table">
-        <tr><th>Name</th><th>Role</th><th>Hourly_Rate</th><th>Hours_Worked</th></tr>
-        <tr><td>Tane</td><td>Barista</td><td>22</td><td>38</td></tr>
-        <tr><td>Aroha</td><td>Manager</td><td>35</td><td>40</td></tr>
-        <tr><td>Liam</td><td>Barista</td><td>20</td><td class="err">-2</td></tr>
-        <tr><td>Mia</td><td>Cashier</td><td>21</td><td>25</td></tr>
-        <tr><td>Connor</td><td>Manager</td><td>33</td><td>42</td></tr>
-        <tr><td>Priya</td><td>Cashier</td><td>22</td><td>30</td></tr>
-      </table>
-      <ol>
-        <li>Create four vectors: <code>Name</code>, <code>Role</code>, <code>Hourly_Rate</code>, <code>Hours_Worked</code></li>
-        <li>Make sure <code>Role</code> is stored as a <strong>categorical variable</strong>, not plain text</li>
-        <li>Combine into a data frame called <code>cafe</code> and print it</li>
-      </ol>
-      <div class="exp-box"><strong>Expected output</strong><pre>    Name    Role Hourly_Rate Hours_Worked
-1   Tane Barista          22           38
-2  Aroha Manager          35           40
-3   Liam Barista          20           -2
-4    Mia Cashier          21           25
-5 Connor Manager          33           42
-6  Priya Cashier          22           30</pre></div>`,
-    check: `
-      ok <- TRUE; msg <- character(0)
-      if (!exists("cafe")) {
-        ok <- FALSE; msg <- c(msg, "cafe data frame not found.")
-      } else {
-        if (nrow(cafe) != 6)
-          { ok <- FALSE; msg <- c(msg, paste0("Row count: ", nrow(cafe), " (expected: 6)")) }
-        needed <- c("Name","Role","Hourly_Rate","Hours_Worked")
-        missing_cols <- needed[!needed %in% names(cafe)]
-        if (length(missing_cols) > 0)
-          { ok <- FALSE; msg <- c(msg, paste("Missing columns:", paste(missing_cols, collapse=", "))) }
-        else if (!is.factor(cafe$Role))
-          { ok <- FALSE; msg <- c(msg, "Role is not a factor. Try as.factor().") }
-      }
-      if (ok) "PASS:  cafe data frame looks correct!" else paste("FAIL:", paste(msg, collapse=" | "))`
-  },
-  {
-    id: 2, label: 'Inspect Categorical Variable',
-    content: `
-      <h2><span class="q-num">2</span> Inspect the Categorical Variable</h2>
-      <ol>
-        <li>Check what <strong>data type</strong> the <code>Role</code> column is</li>
-        <li><strong>List all unique categories</strong> in <code>Role</code></li>
-        <li><strong>Count</strong> how many employees belong to each Role</li>
-      </ol>
-      <div class="exp-box"><strong>Expected output for (c)</strong><pre>Barista Cashier Manager
-      2       2       2</pre></div>`,
-    check: `
-      ok <- TRUE; msg <- character(0)
-      if (!exists("cafe"))
-        { ok <- FALSE; msg <- c(msg, "cafe not found. Complete Step 1 first.") }
-      else if (!is.factor(cafe$Role))
-        { ok <- FALSE; msg <- c(msg, "Role is not a factor.") }
-      else if (nlevels(cafe$Role) != 3)
-        { ok <- FALSE; msg <- c(msg, paste0("Role has ", nlevels(cafe$Role), " levels (expected: 3)")) }
-      if (ok) "PASS:  Role variable looks correct!" else paste("FAIL:", paste(msg, collapse=" | "))`
-  },
-  {
-    id: 3, label: 'Handle Invalid Data',
-    content: `
-      <h2><span class="q-num">3</span> Handle the Invalid Data Entry</h2>
-      <p>Liam's <code>Hours_Worked</code> value of <strong>-2</strong> is impossible — it was a data entry error.</p>
-      <ol>
-        <li>Replace any <strong>negative</strong> <code>Hours_Worked</code> value with a <strong>missing value</strong></li>
-        <li>Print <code>cafe</code> to confirm the change</li>
-      </ol>
-      <div class="exp-box"><strong>Expected output</strong><pre>    Name    Role Hourly_Rate Hours_Worked
-1   Tane Barista          22           38
-2  Aroha Manager          35           40
-3   Liam Barista          20           NA
-4    Mia Cashier          21           25
-5 Connor Manager          33           42
-6  Priya Cashier          22           30</pre></div>`,
-    check: `
-      ok <- TRUE; msg <- character(0)
-      if (!exists("cafe"))
-        { ok <- FALSE; msg <- c(msg, "cafe not found.") }
-      else {
-        if (any(cafe$Hours_Worked < 0, na.rm = TRUE))
-          { ok <- FALSE; msg <- c(msg, "Negative values still exist.") }
-        if (!any(is.na(cafe$Hours_Worked)))
-          { ok <- FALSE; msg <- c(msg, "No NA values found — replace negatives with NA.") }
-      }
-      if (ok) "PASS:  Negative value replaced with NA!" else paste("FAIL:", paste(msg, collapse=" | "))`
-  },
-  {
-    id: 4, label: 'Remove Invalid Row',
-    content: `
-      <h2><span class="q-num">4</span> Remove the Invalid Row</h2>
-      <ol>
-        <li>Load the packages you need</li>
-        <li>Remove the row where <code>Hours_Worked</code> is <strong>missing</strong>. Save back to <code>cafe</code></li>
-        <li>How many rows does <code>cafe</code> now have?</li>
-      </ol>
-      <div class="exp-box"><strong>Expected output</strong><pre>    Name    Role Hourly_Rate Hours_Worked
-1   Tane Barista          22           38
-2  Aroha Manager          35           40
-3    Mia Cashier          21           25
-4 Connor Manager          33           42
-5  Priya Cashier          22           30</pre></div>`,
-    check: `
-      ok <- TRUE; msg <- character(0)
-      if (!exists("cafe"))
-        { ok <- FALSE; msg <- c(msg, "cafe not found.") }
-      else {
-        if (any(is.na(cafe$Hours_Worked)))
-          { ok <- FALSE; msg <- c(msg, "NA row still exists.") }
-        if (nrow(cafe) != 5)
-          { ok <- FALSE; msg <- c(msg, paste0("Row count: ", nrow(cafe), " (expected: 5)")) }
-      }
-      if (ok) "PASS:  NA row removed. 5 rows confirmed!" else paste("FAIL:", paste(msg, collapse=" | "))`
-  },
-  {
-    id: 5, label: 'Add Corrected Row Back',
-    content: `
-      <h2><span class="q-num">5</span> Add the Corrected Row Back</h2>
-      <p>Liam's correct hours have been confirmed as <strong>15</strong>. Add him back to <code>cafe</code>.</p>
-      <ul><li>Name = "Liam", Role = "Barista", Hourly_Rate = 20, Hours_Worked = 15</li></ul>
-      <p>Make sure <code>Role</code> is still stored as a categorical variable after adding.</p>
-      <div class="exp-box"><strong>Expected output</strong><pre>    Name    Role Hourly_Rate Hours_Worked
-1   Tane Barista          22           38
-2  Aroha Manager          35           40
-3    Mia Cashier          21           25
-4 Connor Manager          33           42
-5  Priya Cashier          22           30
-6   Liam Barista          20           15</pre></div>`,
-    check: `
-      ok <- TRUE; msg <- character(0)
-      if (!exists("cafe"))
-        { ok <- FALSE; msg <- c(msg, "cafe not found.") }
-      else {
-        if (nrow(cafe) != 6)
-          { ok <- FALSE; msg <- c(msg, paste0("Row count: ", nrow(cafe), " (expected: 6)")) }
-        liam <- cafe[cafe$Name == "Liam", ]
-        if (nrow(liam) == 0)
-          { ok <- FALSE; msg <- c(msg, "Liam row not found.") }
-        else if (!any(liam$Hours_Worked == 15, na.rm = TRUE))
-          { ok <- FALSE; msg <- c(msg, "Liam's Hours_Worked is not 15.") }
-        if (!is.factor(cafe$Role))
-          { ok <- FALSE; msg <- c(msg, "Role is not a factor. Re-apply as.factor() after add_row().") }
-      }
-      if (ok) "PASS:  Liam added back correctly!" else paste("FAIL:", paste(msg, collapse=" | "))`
-  },
-  {
-    id: 6, label: 'Compute New Variables',
-    content: `
-      <h2><span class="q-num">6</span> Compute New Variables</h2>
-      <p>Add three new columns to <code>cafe</code> at once: <code>Weekly_Pay</code>, <code>Annual_Pay</code>, and <code>Pay_Level</code>.</p>
-      <p><code>Pay_Level</code> should be <strong>"High"</strong> if <code>Weekly_Pay >= 600</code>, otherwise <strong>"Low"</strong>, stored as a categorical variable.</p>
-      <div class="exp-box"><strong>Expected output</strong><pre>    Name    Role Hourly_Rate Hours_Worked Weekly_Pay Annual_Pay Pay_Level
-1   Tane Barista          22           38        836      43472      High
-2  Aroha Manager          35           40       1400      72800      High
-3    Mia Cashier          21           25        525      27300       Low
-4 Connor Manager          33           42       1386      72072      High
-5  Priya Cashier          22           30        660      34320      High
-6   Liam Barista          20           15        300      15600       Low</pre></div>`,
-    check: `
-      ok <- TRUE; msg <- character(0)
-      if (!exists("cafe")) {
-        ok <- FALSE; msg <- c(msg, "cafe not found.")
-      } else {
-        cn <- tolower(names(cafe))
-        if (!"weekly_pay" %in% cn) {
-          ok <- FALSE; msg <- c(msg, "Weekly_Pay column missing.")
-        } else {
-          wpc <- names(cafe)[cn == "weekly_pay"][1]
-          expected <- sort(c(836, 1400, 525, 1386, 660, 300))
-          actual   <- sort(as.numeric(cafe[[wpc]]))
-          if (!identical(expected, actual))
-            { ok <- FALSE; msg <- c(msg, "Weekly_Pay values are incorrect.") }
-        }
-        if (!"annual_pay" %in% cn)
-          { ok <- FALSE; msg <- c(msg, "Annual_Pay column missing.") }
-        plc <- names(cafe)[cn %in% c("pay_level","pay_level")]
-        if (length(plc) == 0)
-          { ok <- FALSE; msg <- c(msg, "Pay_Level column missing.") }
-        else if (!is.factor(cafe[[plc[1]]]))
-          { ok <- FALSE; msg <- c(msg, "Pay_Level is not a factor.") }
-      }
-      if (ok) "PASS:  Weekly_Pay, Annual_Pay, Pay_Level all correct!" else paste("FAIL:", paste(msg, collapse=" | "))`
-  },
-  {
-    id: 7, label: 'Recode Variables',
-    content: `
-      <h2><span class="q-num">7</span> Recode the Variables</h2>
-      <p>Add a new column <code>Experience_Level</code> to <code>cafe</code>, based on <code>Hourly_Rate</code>:</p>
-      <table class="cond-table">
-        <tr><th>Condition</th><th>Label</th></tr>
-        <tr><td>Hourly_Rate &lt; 22</td><td>"Junior"</td></tr>
-        <tr><td>Hourly_Rate &ge; 22 and &lt; 30</td><td>"Mid"</td></tr>
-        <tr><td>Hourly_Rate &ge; 30</td><td>"Senior"</td></tr>
-      </table>
-      <p>Make sure <code>Experience_Level</code> is stored as a categorical variable.</p>
-      <div class="exp-box"><strong>Expected</strong><pre>Tane: Mid | Aroha: Senior | Mia: Junior | Connor: Senior | Priya: Mid | Liam: Junior</pre></div>`,
-    check: `
-      ok <- TRUE; msg <- character(0)
-      if (!exists("cafe")) {
-        ok <- FALSE; msg <- c(msg, "cafe not found.")
-      } else {
-        ecol <- names(cafe)[grepl("experience", tolower(names(cafe)))]
-        if (length(ecol) == 0) {
-          ok <- FALSE; msg <- c(msg, "Experience_Level column missing.")
-        } else {
-          ec <- ecol[1]
-          checks <- list(
-            list(name="Tane",   expected="Mid"),
-            list(name="Aroha",  expected="Senior"),
-            list(name="Liam",   expected="Junior"),
-            list(name="Connor", expected="Senior")
-          )
-          for (ch in checks) {
-            row <- cafe[cafe$Name == ch$name, ec]
-            if (length(row) > 0 && as.character(row[1]) != ch$expected)
-              msg <- c(msg, paste0(ch$name, ": ", row[1], " (expected: ", ch$expected, ")"))
-          }
-          if (length(msg) > 0) ok <- FALSE
-        }
-      }
-      if (ok) "PASS:  Experience_Level classified correctly!" else paste("FAIL:", paste(msg, collapse=" | "))`
-  },
-  {
-    id: 8, label: 'Display Specific Columns',
-    content: `
-      <h2><span class="q-num">8</span> Display Specific Columns</h2>
-      <p>Display only: <code>Name</code>, <code>Weekly_Pay</code>, <code>Pay_Level</code>, <code>Experience_Level</code></p>
-      <p>Try <strong>two different ways</strong> to do this.</p>
-      <div class="exp-box"><strong>Expected output</strong><pre>    Name Weekly_Pay Pay_Level Experience_Level
-1   Tane        836      High              Mid
-2  Aroha       1400      High           Senior
-3    Mia        525       Low           Junior
-4 Connor       1386      High           Senior
-5  Priya        660      High              Mid
-6   Liam        300       Low           Junior</pre></div>`,
-    check: `
-      ok <- TRUE; msg <- character(0)
-      if (!exists("cafe"))
-        { ok <- FALSE; msg <- c(msg, "cafe not found. Complete previous steps first.") }
-      else {
-        cn <- tolower(names(cafe))
-        if (!"weekly_pay" %in% cn)
-          { ok <- FALSE; msg <- c(msg, "Weekly_Pay missing — complete Step 6 first.") }
-        if (!any(grepl("experience", cn)))
-          { ok <- FALSE; msg <- c(msg, "Experience_Level missing — complete Step 7 first.") }
-      }
-      if (ok) "PASS:  Run your code and verify the output looks correct!" else paste("FAIL:", paste(msg, collapse=" | "))`
-  },
-  {
-    id: 9, label: 'Sort the Data',
-    content: `
-      <h2><span class="q-num">9</span> Sort the Data</h2>
-      <ol>
-        <li>Sort <code>cafe</code> by <code>Weekly_Pay</code> from <strong>highest to lowest</strong></li>
-        <li>Sort by <code>Experience_Level</code> alphabetically first, then by <code>Weekly_Pay</code> highest to lowest within each level</li>
-      </ol>
-      <div class="exp-box"><strong>Expected output for (a)</strong><pre>    Name    Role Hourly_Rate Hours_Worked Weekly_Pay Annual_Pay Pay_Level Experience_Level
-1  Aroha Manager          35           40       1400      72800      High           Senior
-2 Connor Manager          33           42       1386      72072      High           Senior
-3   Tane Barista          22           38        836      43472      High              Mid
-4  Priya Cashier          22           30        660      34320      High              Mid
-5    Mia Cashier          21           25        525      27300       Low           Junior
-6   Liam Barista          20           15        300      15600       Low           Junior</pre></div>`,
-    check: `
-      ok <- TRUE; msg <- character(0)
-      if (!exists("cafe"))
-        { ok <- FALSE; msg <- c(msg, "cafe not found.") }
-      else {
-        wpc <- names(cafe)[tolower(names(cafe)) == "weekly_pay"]
-        if (length(wpc) == 0) {
-          ok <- FALSE; msg <- c(msg, "Weekly_Pay missing — complete Step 6 first.")
-        } else {
-          s <- cafe[order(-cafe[[wpc[1]]]), ]
-          if (as.character(s$Name[1]) != "Aroha")
-            { ok <- FALSE; msg <- c(msg, paste0("1st row: ", s$Name[1], " (expected: Aroha)")) }
-          if (as.character(s$Name[nrow(s)]) != "Liam")
-            { ok <- FALSE; msg <- c(msg, paste0("Last row: ", s$Name[nrow(s)], " (expected: Liam)")) }
-        }
-      }
-      if (ok) "PASS:  Sorted correctly!" else paste("FAIL:", paste(msg, collapse=" | "))`
-  },
-  {
-    id: 'B1', label: 'Bonus 1: Filter',
-    content: `
-      <h2><span class="q-num" style="background:var(--gold);">B1</span> Bonus 1: Filter High-Pay Non-Managers</h2>
-      <p>Show only employees whose <code>Pay_Level</code> is <strong>"High"</strong> AND who are <strong>not</strong> Managers.</p>
-      <div class="exp-box"><strong>Expected output</strong><pre>  Name    Role Hourly_Rate Hours_Worked Weekly_Pay Annual_Pay Pay_Level Experience_Level
-3  Tane Barista          22           38        836      43472      High              Mid
-4 Priya Cashier          22           30        660      34320      High              Mid</pre>
-<em style="font-size:0.85em;color:#888;">(row numbers may vary depending on whether you sorted cafe in Step 9)</em></div>`,
-    check: `
-      ok <- TRUE; msg <- character(0)
-      if (!exists("cafe")) { ok <- FALSE; msg <- c(msg, "cafe not found.") }
-      else {
-        pl <- names(cafe)[tolower(names(cafe)) == "pay_level"]
-        if (length(pl) == 0) { ok <- FALSE; msg <- c(msg, "Pay_Level column missing — complete Step 6 first.") }
-        else {
-          filtered <- cafe[as.character(cafe[[pl[1]]]) == "High" & as.character(cafe$Role) != "Manager", ]
-          n <- nrow(filtered)
-          if (n != 2) { ok <- FALSE; msg <- c(msg, paste0("Expected 2 rows (Tane & Priya), got ", n)) }
-          else if (!all(sort(as.character(filtered$Name)) == c("Priya", "Tane")))
-            { ok <- FALSE; msg <- c(msg, "Expected Tane and Priya in the result.") }
-        }
-      }
-      if (ok) "PASS:  Correct! Tane and Priya are the only High-pay non-managers." else paste("FAIL:", paste(msg, collapse=" | "))`
-  },
-  {
-    id: 'B2', label: 'Bonus 2: Average Pay',
-    content: `
-      <h2><span class="q-num" style="background:var(--gold);">B2</span> Bonus 2: Average Weekly Pay</h2>
-      <p>Calculate the <strong>average</strong> <code>Weekly_Pay</code> across all employees.</p>
-      <div class="exp-box"><strong>Expected output</strong><pre>[1] 851.1667</pre></div>`,
-    check: `
-      ok <- TRUE; msg <- character(0)
-      if (!exists("cafe")) { ok <- FALSE; msg <- c(msg, "cafe not found.") }
-      else {
-        wpc <- names(cafe)[tolower(names(cafe)) == "weekly_pay"]
-        if (length(wpc) == 0) { ok <- FALSE; msg <- c(msg, "Weekly_Pay column missing — complete Step 6 first.") }
-        else {
-          avg <- mean(cafe[[wpc[1]]], na.rm = TRUE)
-          if (abs(avg - 851.1667) > 1)
-            { ok <- FALSE; msg <- c(msg, paste0("mean(cafe$Weekly_Pay) = ", round(avg, 2), " (expected ~851.17)")) }
-        }
-      }
-      if (ok) "PASS:  Correct! Average Weekly_Pay is $851.17." else paste("FAIL:", paste(msg, collapse=" | "))`
-  },
-  {
-    id: 'B3', label: 'Bonus 3: Bonus Column',
-    content: `
-      <h2><span class="q-num" style="background:var(--gold);">B3</span> Bonus 3: Add Bonus Column</h2>
-      <p>Add a <code>Bonus</code> column: <strong>10%</strong> of <code>Weekly_Pay</code> for Senior employees, <strong>5%</strong> for everyone else.</p>
-      <p>Then display <code>Name</code>, <code>Experience_Level</code>, <code>Weekly_Pay</code>, and <code>Bonus</code> to verify.</p>
-      <div class="exp-box"><strong>Expected output</strong><pre>    Name Experience_Level Weekly_Pay  Bonus
-1  Aroha           Senior       1400 140.00
-2 Connor           Senior       1386 138.60
-3   Tane              Mid        836  41.80
-4  Priya              Mid        660  33.00
-5    Mia           Junior        525  26.25
-6   Liam           Junior        300  15.00</pre></div>`,
-    check: `
-      ok <- TRUE; msg <- character(0)
-      if (!exists("cafe")) { ok <- FALSE; msg <- c(msg, "cafe not found.") }
-      else if (!"Bonus" %in% names(cafe))
-        { ok <- FALSE; msg <- c(msg, "Bonus column missing. Add it with mutate().") }
-      else {
-        elc <- names(cafe)[grepl("experience", tolower(names(cafe)))]
-        wpc <- names(cafe)[tolower(names(cafe)) == "weekly_pay"]
-        if (length(elc) > 0 && length(wpc) > 0) {
-          seniors <- cafe[as.character(cafe[[elc[1]]]) == "Senior", ]
-          others  <- cafe[as.character(cafe[[elc[1]]]) != "Senior", ]
-          senior_ok <- all(abs(seniors$Bonus - seniors[[wpc[1]]] * 0.1) < 0.01)
-          other_ok  <- all(abs(others$Bonus  - others[[wpc[1]]]  * 0.05) < 0.01)
-          if (!senior_ok) { ok <- FALSE; msg <- c(msg, "Senior bonus should be 10% of Weekly_Pay.") }
-          if (!other_ok)  { ok <- FALSE; msg <- c(msg, "Non-senior bonus should be 5% of Weekly_Pay.") }
-        } else { ok <- FALSE; msg <- c(msg, "Experience_Level or Weekly_Pay column missing.") }
-      }
-      if (ok) "PASS:  Bonus column looks correct!" else paste("FAIL:", paste(msg, collapse=" | "))`
-  }
-    ]},
-  },
-  // ── Add new labs below this line ──────────────────────────────────────────
-  // 'Lab 3: Visualization': {
-  //   'Set A: ...': { steps: [ ... ] },
-  // },
-};
+  <header class="app-header">
+    <div class="header-left">
+      <button id="hamburger" class="hamburger-btn" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="header-brand">
+        <span class="brand-title">Analytics Practice</span>
+        <span class="brand-sub">UoA BUSINFO 700 / 705</span>
+      </div>
+    </div>
+    <div class="header-center">
+      <div class="course-tabs">
+        <button class="course-tab active" data-course="R">700 · R</button>
+        <button class="course-tab" data-course="Excel">705 · Excel</button>
+      </div>
+    </div>
+    <div class="header-right">
+      <div id="webrStatus" class="webrStatus">
+        <span class="status-dot loading"></span>
+        <span class="status-text">Loading R…</span>
+      </div>
+      <button id="theme-toggle" class="icon-btn" aria-label="Toggle theme">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+    </div>
+  </header>
 
-// ─────────────────────────────────────────────
-// WebR init
-// ─────────────────────────────────────────────
-const webR = new WebR();
-let currentLabKey = Object.keys(LABS)[0];
-let currentSetKey = Object.keys(LABS[currentLabKey])[0];
-let currentStep   = 0;
-const completed   = {};  // { labKey: { setKey: Set } }
+  <div class="app-body">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-inner">
+        <div id="sidebar-content"></div>
+      </div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
-async function init() {
-  const msg = document.getElementById('loading-msg');
-  msg.textContent = 'Loading WebR...';
-  await webR.init();
+    <main class="main-panel">
+      <div id="welcome-state" class="welcome-state">
+        <div class="welcome-icon">📊</div>
+        <h2>Select a Question</h2>
+        <p>Choose a topic from the sidebar to start practising</p>
+      </div>
 
-  const packages = ['dplyr', 'tibble', 'tidyr', 'ggplot2', 'readr', 'stringr', 'lubridate', 'scales'];
-  for (const pkg of packages) {
-    msg.textContent = `Installing: ${pkg} (first load only — cached after this)`;
-    await webR.installPackages([pkg]);
-  }
+      <div id="question-view" class="question-view hidden">
+        <div class="question-header">
+          <div class="question-meta">
+            <span class="q-badge" id="q-badge">W1 · Q1</span>
+            <span class="q-type-badge r-type" id="q-type">R</span>
+          </div>
+          <h2 id="q-title">Question</h2>
+        </div>
 
-  msg.textContent = 'Loading packages...';
-  await webR.evalR(`
-    suppressMessages(library(dplyr))
-    suppressMessages(library(tibble))
-    suppressMessages(library(tidyr))
-    suppressMessages(library(ggplot2))
-    suppressMessages(library(readr))
-    suppressMessages(library(stringr))
-    suppressMessages(library(lubridate))
-    suppressMessages(library(scales))
-  `);
-  document.getElementById('loading').style.display = 'none';
-  buildLabSelect();
-  buildSetSelect(currentLabKey);
-  buildNav();
-  showStep(0);
-}
+        <div class="scenario-panel">
+          <div class="panel-header">
+            <span class="panel-icon">📋</span>
+            <span class="panel-label">Scenario</span>
+          </div>
+          <div class="panel-body">
+            <div id="q-scenario" class="scenario-content"></div>
+          </div>
+        </div>
 
-// ─────────────────────────────────────────────
-// UI
-// ─────────────────────────────────────────────
-function buildLabSelect() {
-  const sel = document.getElementById('lab-select');
-  Object.keys(LABS).forEach(key => {
-    const opt = document.createElement('option');
-    opt.value = key;
-    opt.textContent = key;
-    sel.appendChild(opt);
-  });
-}
+        <div class="task-panel">
+          <div class="panel-header">
+            <span class="panel-icon">🎯</span>
+            <span class="panel-label">Task</span>
+          </div>
+          <div class="panel-body">
+            <div id="q-task" class="task-content"></div>
+          </div>
+        </div>
 
-function buildSetSelect(labKey) {
-  const sel = document.getElementById('set-select');
-  sel.innerHTML = '';
-  Object.keys(LABS[labKey]).forEach(key => {
-    const opt = document.createElement('option');
-    opt.value = key;
-    opt.textContent = key;
-    sel.appendChild(opt);
-  });
-}
+        <div class="code-area">
+          <div class="editor-section">
+            <div class="section-header">
+              <span class="section-label">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                Code Editor
+              </span>
+              <div class="editor-actions">
+                <button id="clear-btn" class="btn-ghost btn-sm">Clear</button>
+                <button id="run-btn" class="btn-primary btn-run">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+                  Run
+                </button>
+              </div>
+            </div>
+            <div id="editor-container"></div>
+          </div>
 
-function switchLab(key) {
-  currentLabKey = key;
-  currentStep   = 0;
-  buildSetSelect(key);
-  currentSetKey = Object.keys(LABS[key])[0];
-  buildNav();
-  showStep(0);
-}
+          <div class="console-section">
+            <div class="section-header">
+              <span class="section-label">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                Output
+              </span>
+              <button id="clear-console-btn" class="btn-ghost btn-sm">Clear</button>
+            </div>
+            <div id="console-output" class="console-output">
+              <span class="console-placeholder">Run your code to see output here…</span>
+            </div>
+          </div>
+        </div>
 
-function switchSet(key) {
-  currentSetKey = key;
-  currentStep   = 0;
-  buildNav();
-  showStep(0);
-}
+        <div class="solution-section">
+          <button id="show-solution-btn" class="btn-solution">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span id="solution-btn-text">Show Solution</span>
+          </button>
+          <div id="solution-panel" class="solution-panel hidden">
+            <div class="section-header">
+              <span class="section-label">✅ Solution</span>
+              <button id="copy-solution-btn" class="btn-ghost btn-sm">Copy</button>
+            </div>
+            <div id="solution-code"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
 
-function buildNav() {
-  const nav = document.getElementById('step-nav');
-  nav.innerHTML = '';
-  const steps = LABS[currentLabKey][currentSetKey].steps;
-  if (!completed[currentLabKey]) completed[currentLabKey] = {};
-  if (!completed[currentLabKey][currentSetKey]) completed[currentLabKey][currentSetKey] = new Set();
-  steps.forEach((s, i) => {
-    const li = document.createElement('li');
-    const isDone = completed[currentLabKey][currentSetKey].has(i);
-    li.innerHTML = `
-      <button onclick="showStep(${i})" id="nav-btn-${i}" class="${isDone ? 'done' : ''}">
-        <span class="step-badge" id="badge-${i}">${s.id}</span>
-        <span class="step-label">${s.label}</span>
-        <span class="tick" id="tick-${i}">${isDone ? '✓' : ''}</span>
-      </button>`;
-    nav.appendChild(li);
-  });
-}
-
-function showStep(index) {
-  currentStep = index;
-  document.querySelectorAll('.step-nav button').forEach((b, i) => {
-    b.classList.toggle('active', i === index);
-  });
-
-  const qContent  = document.getElementById('q-content');
-  const qExpected = document.getElementById('q-expected');
-  const steps = LABS[currentLabKey][currentSetKey].steps;
-  qContent.innerHTML  = steps[index].content;
-  qExpected.innerHTML = '';
-
-  // Move all exp-box elements to the right panel
-  const boxes = qContent.querySelectorAll('.exp-box');
-  if (boxes.length > 0) {
-    const label = document.createElement('div');
-    label.className = 'q-expected-label';
-    label.textContent = 'Expected Output';
-    qExpected.appendChild(label);
-    boxes.forEach(el => qExpected.appendChild(el));
-  }
-
-  document.getElementById('code-editor').value = '';
-  document.getElementById('output').textContent = '— run your code to see output —';
-  document.getElementById('output').className = '';
-  const cr = document.getElementById('check-result');
-  cr.className = 'check-result';
-  cr.textContent = '';
-  document.getElementById('code-editor').focus();
-}
-
-function resetEditor() {
-  document.getElementById('code-editor').value = '';
-  document.getElementById('output').textContent = '— run your code to see output —';
-  document.getElementById('output').className = '';
-  const cr = document.getElementById('check-result');
-  cr.className = 'check-result';
-  cr.textContent = '';
-}
-
-// ─────────────────────────────────────────────
-// Run
-// ─────────────────────────────────────────────
-async function runCode() {
-  const btn = document.getElementById('btn-run');
-  const code = document.getElementById('code-editor').value.trim();
-  if (!code) return;
-  btn.disabled = true;
-  btn.textContent = '⏳';
-  const outEl = document.getElementById('output');
-  outEl.textContent = '';
-  outEl.className = '';
-  try {
-    const result = await webR.evalR(`
-      paste(
-        capture.output(
-          tryCatch(
-            eval(parse(text = ${JSON.stringify(code)}), envir = globalenv()),
-            error   = function(e) cat("Error:", conditionMessage(e), "\\n"),
-            warning = function(w) { cat("Warning:", conditionMessage(w), "\\n"); invokeRestart("muffleWarning") }
-          )
-        ),
-        collapse = "\\n"
-      )
-    `);
-    const js = await result.toJs();
-    const text = js.values[0];
-    outEl.textContent = text || '(no output)';
-    if (text && text.startsWith('Error:')) outEl.classList.add('output-err');
-  } catch (e) {
-    outEl.textContent = 'Error: ' + e.message;
-    outEl.classList.add('output-err');
-  }
-  btn.disabled = false;
-  btn.textContent = '▶ Run';
-}
-
-// ─────────────────────────────────────────────
-// Check
-// ─────────────────────────────────────────────
-async function checkAnswer() {
-  const btn = document.getElementById('btn-check');
-  btn.disabled = true;
-  btn.textContent = '⏳';
-  const cr = document.getElementById('check-result');
-  try {
-    const steps = LABS[currentLabKey][currentSetKey].steps;
-    const result = await webR.evalR(steps[currentStep].check);
-    const js = await result.toJs();
-    const msg = js.values[0];
-    if (msg.startsWith('PASS')) {
-      cr.className = 'check-result pass';
-      cr.textContent = '✓ ' + msg.replace('PASS:', '').trim();
-      completed[currentLabKey][currentSetKey].add(currentStep);
-      document.getElementById(`tick-${currentStep}`).textContent = '✓';
-      document.getElementById(`nav-btn-${currentStep}`).classList.add('done');
-    } else {
-      cr.className = 'check-result fail';
-      cr.textContent = '✗ ' + msg.replace('FAIL:', '').trim();
-    }
-  } catch (e) {
-    cr.className = 'check-result fail';
-    cr.textContent = '✗ Error: ' + e.message;
-  }
-  btn.disabled = false;
-  btn.textContent = '✓ Check';
-}
-
-// ─────────────────────────────────────────────
-// Keyboard shortcuts
-// ─────────────────────────────────────────────
-document.getElementById('code-editor').addEventListener('keydown', e => {
-  if (e.ctrlKey && e.key === 'Enter') { e.preventDefault(); runCode(); }
-  if (e.key === 'Tab') {
-    e.preventDefault();
-    const ta = e.target;
-    const s = ta.selectionStart;
-    ta.value = ta.value.substring(0, s) + '  ' + ta.value.substring(ta.selectionEnd);
-    ta.selectionStart = ta.selectionEnd = s + 2;
-  }
-});
-
-// expose globals
-window.showStep   = showStep;
-window.switchLab  = switchLab;
-window.switchSet  = switchSet;
-window.runCode    = runCode;
-window.checkAnswer = checkAnswer;
-window.resetEditor = resetEditor;
-
-init();
-</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/r/r.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/matchbrackets.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script type="module" src="js/app.js"></script>
 </body>
 </html>

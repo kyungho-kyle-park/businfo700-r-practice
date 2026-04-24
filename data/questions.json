@@ -1,0 +1,222 @@
+[
+  {
+    "id": 1,
+    "week": 1,
+    "type": "R",
+    "title": "Create Vectors",
+    "scenario": "You are helping a Data Analytics lecturer process student exam results for 5 students in the BUSINFO 700 paper.",
+    "task": "Create a <strong>numeric vector</strong> called <code>scores</code> with the values: <code>85, 92, 78, 95, 88</code>.<br><br>Then display the vector, check its <em>class</em>, and find its <em>length</em>.",
+    "starter": "# Create the scores vector\nscores <- \n\n# Display the vector\n\n# Check class and length\n",
+    "solution": "c2NvcmVzIDwtIGMoODUsIDkyLCA3OCwgOTUsIDg4KQpzY29yZXMKY2xhc3Moc2NvcmVzKQpsZW5ndGgoc2NvcmVzKQ==",
+    "release_at": "2026-04-13T00:00:00+12:00"
+  },
+  {
+    "id": 2,
+    "week": 1,
+    "type": "R",
+    "title": "Descriptive Statistics",
+    "scenario": "The <code>scores</code> vector from Q1 is already in memory. The lecturer wants a quick statistical summary.",
+    "task": "Using the <code>scores</code> vector, calculate and display:<br><ul><li><code>mean()</code> — average score</li><li><code>max()</code> and <code>min()</code> — range</li><li><code>sum()</code> — total points</li><li><code>sd()</code> — standard deviation</li></ul>",
+    "starter": "# Assume scores is already created:\nscores <- c(85, 92, 78, 95, 88)\n\n# Calculate statistics below:\n",
+    "solution": "c2NvcmVzIDwtIGMoODUsIDkyLCA3OCwgOTUsIDg4KQptZWFuKHNjb3JlcykKbWF4KHNjb3JlcykKbWluKHNjb3JlcykKc3VtKHNjb3JlcykKc2Qoc2NvcmVzKQ==",
+    "release_at": "2026-04-13T00:00:00+12:00"
+  },
+  {
+    "id": 3,
+    "week": 1,
+    "type": "R",
+    "title": "Character Vectors & Data Frame",
+    "scenario": "You need to build a proper student record by combining names and scores into a structured data frame.",
+    "task": "1. Create a character vector <code>students</code> with names: <code>\"Alice\", \"Bob\", \"Carol\", \"David\", \"Eve\"</code><br>2. Create a data frame <code>student_df</code> with columns <code>Name</code> and <code>Score</code><br>3. Print the data frame and run <code>str()</code> on it",
+    "starter": "# Student names vector\nstudents <- \n\n# Scores vector\nscores <- c(85, 92, 78, 95, 88)\n\n# Create data frame\nstudent_df <- \n\n# Display and inspect\n",
+    "solution": "c3R1ZGVudHMgPC0gYygiQWxpY2UiLCAiQm9iIiwgIkNhcm9sIiwgIkRhdmlkIiwgIkV2ZSIpCnNjb3JlcyA8LSBjKDg1LCA5MiwgNzgsIDk1LCA4OCkKc3R1ZGVudF9kZiA8LSBkYXRhLmZyYW1lKAogIE5hbWUgID0gc3R1ZGVudHMsCiAgU2NvcmUgPSBzY29yZXMKKQpzdHVkZW50X2RmCnN0cihzdHVkZW50X2RmKQ==",
+    "release_at": "2026-04-13T00:00:00+12:00"
+  },
+  {
+    "id": 4,
+    "week": 1,
+    "type": "R",
+    "title": "Logical Vectors & Subsetting",
+    "scenario": "The lecturer needs to identify which students passed (score ≥ 85) and extract only their scores.",
+    "task": "1. Create a logical vector <code>pass</code> that is <code>TRUE</code> when score ≥ 85<br>2. Print <code>pass</code><br>3. Use <code>sum()</code> to count how many passed<br>4. Use <code>pass</code> to subset and display only the passing scores",
+    "starter": "scores <- c(85, 92, 78, 95, 88)\n\n# Logical vector for pass (>= 85)\npass <- \n\n# Print pass\n\n# Count passes\n\n# Subset passing scores\n",
+    "solution": "c2NvcmVzIDwtIGMoODUsIDkyLCA3OCwgOTUsIDg4KQpwYXNzIDwtIHNjb3JlcyA+PSA4NQpwYXNzCnN1bShwYXNzKSAgICAgICAgICAgICMgbnVtYmVyIG9mIHBhc3Nlcwpzb3JlcyA8LSBjKDg1LCA5MiwgNzgsIDk1LCA4OCkKc2NvcmVzW3Bhc3NdICAgICAgICAgIyBzY29yZXMgb2YgcGFzc2luZyBzdHVkZW50cw==",
+    "release_at": "2026-04-13T00:00:00+12:00"
+  },
+  {
+    "id": 5,
+    "week": 1,
+    "type": "R",
+    "title": "Factor Variables",
+    "scenario": "Students received letter grades. You need to treat them as categorical data for analysis.",
+    "task": "1. Create a character vector <code>grades</code> with: <code>\"A\", \"B\", \"B\", \"A\", \"A\"</code><br>2. Convert it to a factor <code>grades_f</code> using <code>as.factor()</code><br>3. Check the class, list the levels, and count occurrences with <code>table()</code>",
+    "starter": "# Create grades vector\ngrades <- \n\n# Convert to factor\ngrades_f <- \n\n# Inspect: class, levels, table\n",
+    "solution": "Z3JhZGVzICAgPC0gYygiQSIsICJCIiwgIkIiLCAiQSIsICJBIikKZ3JhZGVzX2YgPC0gYXMuZmFjdG9yKGdyYWRlcykKY2xhc3MoZ3JhZGVzX2YpCmxldmVscyhncmFkZXNfZikKdGFibGUoZ3JhZGVzX2Yp",
+    "release_at": "2026-04-13T00:00:00+12:00"
+  },
+  {
+    "id": 6,
+    "week": 2,
+    "type": "R",
+    "title": "Lab 2 · Create Café Data Frame",
+    "scenario": "You are analysing staff records for an Auckland café. Build the initial dataset from raw vectors.",
+    "task": "Create the following vectors and combine into a data frame called <code>cafe</code>:<br><ul><li><code>Name</code>: Tane, Aroha, Liam, Mia, Connor, Priya</li><li><code>Role</code>: Barista, Manager, Barista, Cashier, Manager, Cashier — as a <strong>factor</strong></li><li><code>Hourly_Rate</code>: 22, 35, 20, 21, 33, 22</li><li><code>Hours_Worked</code>: 38, 40, <strong>-2</strong>, 25, 42, 30</li></ul>Print the data frame.",
+    "starter": "# Create vectors\nName         <- \nRole         <- \nHourly_Rate  <- \nHours_Worked <- \n\n# Combine into data frame\ncafe <- \ncafe\n",
+    "solution": "TmFtZSAgICAgICAgIDwtIGMoIlRhbmUiLCAiQXJvaGEiLCAiTGlhbSIsICJNaWEiLCAiQ29ubm9yIiwgIlByaXlhIikKUm9sZSAgICAgICAgIDwtIGFzLmZhY3RvcihjKCJCYXJpc3RhIiwgIk1hbmFnZXIiLCAiQmFyaXN0YSIsICJDYXNoaWVyIiwgIk1hbmFnZXIiLCAiQ2FzaGllciIpKQpIb3VybHlfUmF0ZSAgPC0gYygyMiwgMzUsIDIwLCAyMSwgMzMsIDIyKQpIb3Vyc19Xb3JrZWQgPC0gYygzOCwgNDAsIC0yLCAyNSwgNDIsIDMwKQoKY2FmZSA8LSBkYXRhLmZyYW1lKE5hbWUsIFJvbGUsIEhvdXJseV9SYXRlLCBIb3Vyc19Xb3JrZWQpCmNhZmU=",
+    "release_at": "2026-04-20T00:00:00+12:00"
+  },
+  {
+    "id": 7,
+    "week": 2,
+    "type": "R",
+    "title": "Lab 2 · Inspect Factor Variable",
+    "scenario": "The <code>cafe</code> data frame is ready. Now inspect the categorical <code>Role</code> column.",
+    "task": "Assuming <code>cafe</code> is already created (copy the Q6 code if needed), use three functions on <code>cafe$Role</code>:<br><ol><li><code>class()</code> — confirm it's a factor</li><li><code>levels()</code> — list all unique categories</li><li><code>table()</code> — count staff per role</li></ol>",
+    "starter": "# Run Q6 first to create cafe, then:\nName <- c(\"Tane\",\"Aroha\",\"Liam\",\"Mia\",\"Connor\",\"Priya\")\nRole <- as.factor(c(\"Barista\",\"Manager\",\"Barista\",\"Cashier\",\"Manager\",\"Cashier\"))\nHourly_Rate <- c(22,35,20,21,33,22)\nHours_Worked <- c(38,40,-2,25,42,30)\ncafe <- data.frame(Name,Role,Hourly_Rate,Hours_Worked)\n\n# Now inspect Role:\n",
+    "solution": "TmFtZSA8LSBjKCJUYW5lIiwiQXJvaGEiLCJMaWFtIiwiTWlhIiwiQ29ubm9yIiwiUHJpeWEiKQpSb2xlIDwtIGFzLmZhY3RvcihjKCJCYXJpc3RhIiwiTWFuYWdlciIsIkJhcmlzdGEiLCJDYXNoaWVyIiwiTWFuYWdlciIsIkNhc2hpZXIiKSkKSG91cmx5X1JhdGUgPC0gYygyMiwzNSwyMCwyMSwzMywyMikKSG91cnNfV29ya2VkIDwtIGMoMzgsNDAsLTIsMjUsNDIsMzApCmNhZmUgPC0gZGF0YS5mcmFtZShOYW1lLFJvbGUsSG91cmx5X1JhdGUsSG91cnNfV29ya2VkKQoKY2xhc3MoY2FmZSRSb2xlKQpsZXZlbHMoY2FmZSRSb2xlKQp0YWJsZShjYWZlJFJvbGUp",
+    "release_at": "2026-04-20T00:00:00+12:00"
+  },
+  {
+    "id": 8,
+    "week": 2,
+    "type": "R",
+    "title": "Lab 2 · Handle Invalid Data → NA",
+    "scenario": "Liam's <code>Hours_Worked</code> is <strong>-2</strong>, which is clearly an entry error. Replace it with <code>NA</code> to flag it for later.",
+    "task": "Using <strong>bracket subsetting</strong>, find all rows where <code>Hours_Worked</code> is negative and replace those values with <code>NA</code>.<br><br>Print <code>cafe</code> after the fix to verify.",
+    "starter": "Name <- c(\"Tane\",\"Aroha\",\"Liam\",\"Mia\",\"Connor\",\"Priya\")\nRole <- as.factor(c(\"Barista\",\"Manager\",\"Barista\",\"Cashier\",\"Manager\",\"Cashier\"))\nHourly_Rate <- c(22,35,20,21,33,22)\nHours_Worked <- c(38,40,-2,25,42,30)\ncafe <- data.frame(Name,Role,Hourly_Rate,Hours_Worked)\n\n# Replace negative Hours_Worked with NA\n",
+    "solution": "TmFtZSA8LSBjKCJUYW5lIiwiQXJvaGEiLCJMaWFtIiwiTWlhIiwiQ29ubm9yIiwiUHJpeWEiKQpSb2xlIDwtIGFzLmZhY3RvcihjKCJCYXJpc3RhIiwiTWFuYWdlciIsIkJhcmlzdGEiLCJDYXNoaWVyIiwiTWFuYWdlciIsIkNhc2hpZXIiKSkKSG91cmx5X1JhdGUgPC0gYygyMiwzNSwyMCwyMSwzMywyMikKSG91cnNfV29ya2VkIDwtIGMoMzgsNDAsLTIsMjUsNDIsMzApCmNhZmUgPC0gZGF0YS5mcmFtZShOYW1lLFJvbGUsSG91cmx5X1JhdGUsSG91cnNfV29ya2VkKQoKY2FmZSRIb3Vyc19Xb3JrZWRbY2FmZSRIb3Vyc19Xb3JrZWQgPCAwXSA8LSBOQQpjYWZl",
+    "release_at": "2026-04-20T00:00:00+12:00"
+  },
+  {
+    "id": 9,
+    "week": 2,
+    "type": "R",
+    "title": "Lab 2 · Filter NA Rows with dplyr",
+    "scenario": "Now that Liam's invalid row is flagged as <code>NA</code>, remove it temporarily to clean the dataset.",
+    "task": "Using <code>dplyr</code>, filter out any row where <code>Hours_Worked</code> is <code>NA</code>.<br>Use the pipe <code>%>%</code> and <code>filter(!is.na(...))</code>.<br><br>Print <code>nrow(cafe)</code> to confirm 5 rows remain.",
+    "starter": "library(dplyr)\nName <- c(\"Tane\",\"Aroha\",\"Liam\",\"Mia\",\"Connor\",\"Priya\")\nRole <- as.factor(c(\"Barista\",\"Manager\",\"Barista\",\"Cashier\",\"Manager\",\"Cashier\"))\nHourly_Rate <- c(22,35,20,21,33,22)\nHours_Worked <- c(38,40,NA,25,42,30)\ncafe <- data.frame(Name,Role,Hourly_Rate,Hours_Worked)\n\n# Filter out NA rows\ncafe <- \nnrow(cafe)\n",
+    "solution": "bGlicmFyeShkcGx5cikKTmFtZSA8LSBjKCJUYW5lIiwiQXJvaGEiLCJMaWFtIiwiTWlhIiwiQ29ubm9yIiwiUHJpeWEiKQpSb2xlIDwtIGFzLmZhY3RvcihjKCJCYXJpc3RhIiwiTWFuYWdlciIsIkJhcmlzdGEiLCJDYXNoaWVyIiwiTWFuYWdlciIsIkNhc2hpZXIiKSkKSG91cmx5X1JhdGUgPC0gYygyMiwzNSwyMCwyMSwzMywyMikKSG91cnNfV29ya2VkIDwtIGMoMzgsNDAsLTIsMjUsNDIsMzApCmNhZmUgPC0gZGF0YS5mcmFtZShOYW1lLFJvbGUsSG91cmx5X1JhdGUsSG91cnNfV29ya2VkKQpjYWZlJEhvdXJzX1dvcmtlZFtjYWZlJEhvdXJzX1dvcmtlZCA8IDBdIDwtIE5BCmNhZmUgPC0gY2FmZSAlPiUgZmlsdGVyKCFpcy5uYShIb3Vyc19Xb3JrZWQpKQpucm93KGNhZmUp",
+    "release_at": "2026-04-20T00:00:00+12:00"
+  },
+  {
+    "id": 10,
+    "week": 2,
+    "type": "R",
+    "title": "Lab 2 · Add a Row with add_row()",
+    "scenario": "Liam's correct hours have been confirmed as <strong>15</strong>. Add him back to the dataset.",
+    "task": "Using <code>dplyr::add_row()</code>, append Liam's corrected record:<br><code>Name=\"Liam\", Role=\"Barista\", Hourly_Rate=20, Hours_Worked=15</code><br><br>After adding, re-apply <code>as.factor()</code> to <code>Role</code> and print the result.",
+    "starter": "library(dplyr)\n# Build the 5-row cafe (after NA removal)\nName <- c(\"Tane\",\"Aroha\",\"Mia\",\"Connor\",\"Priya\")\nRole <- as.factor(c(\"Barista\",\"Manager\",\"Cashier\",\"Manager\",\"Cashier\"))\nHourly_Rate <- c(22,35,21,33,22)\nHours_Worked <- c(38,40,25,42,30)\ncafe <- data.frame(Name,Role,Hourly_Rate,Hours_Worked)\n\n# Add Liam back with corrected hours\ncafe <- \n# Re-apply factor to Role\ncafe$Role <- \ncafe\n",
+    "solution": "bGlicmFyeShkcGx5cikKTmFtZSA8LSBjKCJUYW5lIiwiQXJvaGEiLCJNaWEiLCJDb25ub3IiLCJQcml5YSIpClJvbGUgPC0gYXMuZmFjdG9yKGMoIkJhcmlzdGEiLCJNYW5hZ2VyIiwiQ2FzaGllciIsIk1hbmFnZXIiLCJDYXNoaWVyIikpCkhvdXJseV9SYXRlIDwtIGMoMjIsMzUsMjEsMzMsMjIpCkhvdXJzX1dvcmtlZCA8LSBjKDM4LDQwLDI1LDQyLDMwKQpjYWZlIDwtIGRhdGEuZnJhbWUoTmFtZSxSb2xlLEhvdXJseV9SYXRlLEhvdXJzX1dvcmtlZCkKCmNhZmUgPC0gY2FmZSAlPiUgYWRkX3JvdygKICBOYW1lID0gIkxpYW0iLCBSb2xlID0gIkJhcmlzdGEiLAogIEhvdXJseV9SYXRlID0gMjAsIEhvdXJzX1dvcmtlZCA9IDE1CikKY2FmZSRSb2xlIDwtIGFzLmZhY3RvcihjYWZlJFJvbGUpCmNhZmU=",
+    "release_at": "2026-04-20T00:00:00+12:00"
+  },
+  {
+    "id": 11,
+    "week": 2,
+    "type": "R",
+    "title": "Lab 2 · mutate() — Add Computed Columns",
+    "scenario": "With the clean 6-row dataset, calculate payroll figures and categorise pay levels.",
+    "task": "Use <code>mutate()</code> to add 3 new columns in one chain:<br><ol><li><code>Weekly_Pay</code> = Hourly_Rate × Hours_Worked</li><li><code>Annual_Pay</code> = Weekly_Pay × 52</li><li><code>Pay_Level</code> = <code>\"High\"</code> if Weekly_Pay ≥ 600, else <code>\"Low\"</code> — convert to factor</li></ol>",
+    "starter": "library(dplyr)\nName <- c(\"Tane\",\"Aroha\",\"Liam\",\"Mia\",\"Connor\",\"Priya\")\nRole <- as.factor(c(\"Barista\",\"Manager\",\"Barista\",\"Cashier\",\"Manager\",\"Cashier\"))\nHourly_Rate <- c(22,35,20,21,33,22)\nHours_Worked <- c(38,40,15,25,42,30)\ncafe <- data.frame(Name,Role,Hourly_Rate,Hours_Worked)\n\n# Add computed columns\ncafe <- cafe %>% mutate(\n  \n)\ncafe\n",
+    "solution": "bGlicmFyeShkcGx5cikKTmFtZSA8LSBjKCJUYW5lIiwiQXJvaGEiLCJMaWFtIiwiTWlhIiwiQ29ubm9yIiwiUHJpeWEiKQpSb2xlIDwtIGFzLmZhY3RvcihjKCJCYXJpc3RhIiwiTWFuYWdlciIsIkJhcmlzdGEiLCJDYXNoaWVyIiwiTWFuYWdlciIsIkNhc2hpZXIiKSkKSG91cmx5X1JhdGUgPC0gYygyMiwzNSwyMCwyMSwzMywyMikKSG91cnNfV29ya2VkIDwtIGMoMzgsNDAsMTUsMjUsNDIsMzApCmNhZmUgPC0gZGF0YS5mcmFtZShOYW1lLFJvbGUsSG91cmx5X1JhdGUsSG91cnNfV29ya2VkKQoKY2FmZSA8LSBjYWZlICU+JSBtdXRhdGUoCiAgV2Vla2x5X1BheSA9IEhvdXJseV9SYXRlICogSG91cnNfV29ya2VkLAogIEFubnVhbF9QYXkgPSBXZWVrbHlfUGF5ICogNTIsCiAgUGF5X0xldmVsICA9IGlmZWxzZShXZWVrbHlfUGF5ID49IDYwMCwgIkhpZ2giLCAiTG93IiksCiAgUGF5X0xldmVsICA9IGFzLmZhY3RvcihQYXlfTGV2ZWwpCikKY2FmZQ==",
+    "release_at": "2026-04-20T00:00:00+12:00"
+  },
+  {
+    "id": 12,
+    "week": 2,
+    "type": "R",
+    "title": "Lab 2 · case_when() — Multi-tier Recode",
+    "scenario": "HR wants to classify staff by seniority based on their hourly rate to plan training budgets.",
+    "task": "Using <code>case_when()</code> inside <code>mutate()</code>, create <code>Experience_Level</code>:<br><ul><li><code>Hourly_Rate &lt; 22</code> → <code>\"Junior\"</code></li><li><code>22 ≤ Hourly_Rate &lt; 30</code> → <code>\"Mid\"</code></li><li><code>Hourly_Rate ≥ 30</code> → <code>\"Senior\"</code></li></ul>Convert the result to a factor.",
+    "starter": "library(dplyr)\nName <- c(\"Tane\",\"Aroha\",\"Liam\",\"Mia\",\"Connor\",\"Priya\")\nRole <- as.factor(c(\"Barista\",\"Manager\",\"Barista\",\"Cashier\",\"Manager\",\"Cashier\"))\nHourly_Rate <- c(22,35,20,21,33,22)\nHours_Worked <- c(38,40,15,25,42,30)\ncafe <- data.frame(Name,Role,Hourly_Rate,Hours_Worked)\ncafe <- cafe %>% mutate(Weekly_Pay=Hourly_Rate*Hours_Worked, Annual_Pay=Weekly_Pay*52,\n                        Pay_Level=as.factor(ifelse(Weekly_Pay>=600,\"High\",\"Low\")))\n\n# Add Experience_Level\ncafe <- cafe %>% mutate(\n  Experience_Level = case_when(\n    \n  ),\n  Experience_Level = as.factor(Experience_Level)\n)\ncafe\n",
+    "solution": "bGlicmFyeShkcGx5cikKTmFtZSA8LSBjKCJUYW5lIiwiQXJvaGEiLCJMaWFtIiwiTWlhIiwiQ29ubm9yIiwiUHJpeWEiKQpSb2xlIDwtIGFzLmZhY3RvcihjKCJCYXJpc3RhIiwiTWFuYWdlciIsIkJhcmlzdGEiLCJDYXNoaWVyIiwiTWFuYWdlciIsIkNhc2hpZXIiKSkKSG91cmx5X1JhdGUgPC0gYygyMiwzNSwyMCwyMSwzMywyMikKSG91cnNfV29ya2VkIDwtIGMoMzgsNDAsMTUsMjUsNDIsMzApCmNhZmUgPC0gZGF0YS5mcmFtZShOYW1lLFJvbGUsSG91cmx5X1JhdGUsSG91cnNfV29ya2VkKQpjYWZlIDwtIGNhZmUgJT4lIG11dGF0ZShXZWVrbHlfUGF5PUhvdXJseV9SYXRlKkhvdXJzX1dvcmtlZCxBbm51YWxfUGF5PVdlZWtseV9QYXkqNTIsUGF5X0xldmVsPWFzLmZhY3RvcihpZmVsc2UoV2Vla2x5X1BheT49NjAwLCJIaWdoIiwiTG93IikpKQoKY2FmZSA8LSBjYWZlICU+JSBtdXRhdGUoCiAgRXhwZXJpZW5jZV9MZXZlbCA9IGNhc2Vfd2hlbigKICAgIEhvdXJseV9SYXRlIDwgMjIgICAgICAgICAgICAgICAgICAgICAgICAgfiAiSnVuaW9yIiwKICAgIEhvdXJseV9SYXRlID49IDIyICYgSG91cmx5X1JhdGUgPCAzMCAgICAgfiAiTWlkIiwKICAgIEhvdXJseV9SYXRlID49IDMwICAgICAgICAgICAgICAgICAgICAgICAgfiAiU2VuaW9yIgogICksCiAgRXhwZXJpZW5jZV9MZXZlbCA9IGFzLmZhY3RvcihFeHBlcmllbmNlX0xldmVsKQopCmNhZmU=",
+    "release_at": "2026-04-20T00:00:00+12:00"
+  },
+  {
+    "id": 13,
+    "week": 2,
+    "type": "R",
+    "title": "Lab 2 · select() — Column Subset",
+    "scenario": "The payroll report only needs 4 columns. Extract just those from the full dataset.",
+    "task": "Select only: <code>Name</code>, <code>Weekly_Pay</code>, <code>Pay_Level</code>, <code>Experience_Level</code><br><br>Do it <strong>two ways</strong>:<br>(a) Bracket notation: <code>cafe[ , c(...)]</code><br>(b) dplyr: <code>cafe %>% select(...)</code>",
+    "starter": "library(dplyr)\nName <- c(\"Tane\",\"Aroha\",\"Liam\",\"Mia\",\"Connor\",\"Priya\")\nRole <- as.factor(c(\"Barista\",\"Manager\",\"Barista\",\"Cashier\",\"Manager\",\"Cashier\"))\nHourly_Rate <- c(22,35,20,21,33,22)\nHours_Worked <- c(38,40,15,25,42,30)\ncafe <- data.frame(Name,Role,Hourly_Rate,Hours_Worked)\ncafe <- cafe %>% mutate(Weekly_Pay=Hourly_Rate*Hours_Worked,Annual_Pay=Weekly_Pay*52,\n  Pay_Level=as.factor(ifelse(Weekly_Pay>=600,\"High\",\"Low\")),\n  Experience_Level=as.factor(case_when(Hourly_Rate<22~\"Junior\",Hourly_Rate<30~\"Mid\",TRUE~\"Senior\")))\n\n# (a) Bracket notation\n\n# (b) select()\n",
+    "solution": "bGlicmFyeShkcGx5cikKTmFtZSA8LSBjKCJUYW5lIiwiQXJvaGEiLCJMaWFtIiwiTWlhIiwiQ29ubm9yIiwiUHJpeWEiKQpSb2xlIDwtIGFzLmZhY3RvcihjKCJCYXJpc3RhIiwiTWFuYWdlciIsIkJhcmlzdGEiLCJDYXNoaWVyIiwiTWFuYWdlciIsIkNhc2hpZXIiKSkKSG91cmx5X1JhdGUgPC0gYygyMiwzNSwyMCwyMSwzMywyMikKSG91cnNfV29ya2VkIDwtIGMoMzgsNDAsMTUsMjUsNDIsMzApCmNhZmUgPC0gZGF0YS5mcmFtZShOYW1lLFJvbGUsSG91cmx5X1JhdGUsSG91cnNfV29ya2VkKQpjYWZlIDwtIGNhZmUgJT4lIG11dGF0ZShXZWVrbHlfUGF5PUhvdXJseV9SYXRlKkhvdXJzX1dvcmtlZCxBbm51YWxfUGF5PVdlZWtseV9QYXkqNTIsCiAgUGF5X0xldmVsPWFzLmZhY3RvcihpZmVsc2UoV2Vla2x5X1BheT49NjAwLCJIaWdoIiwiTG93IikpLAogIEV4cGVyaWVuY2VfTGV2ZWw9YXMuZmFjdG9yKGNhc2Vfd2hlbihIb3VybHlfUmF0ZTwyMn4iSnVuaW9yIixIb3VybHlfUmF0ZTwzMH4iTWlkIixUUlVFfiJTZW5pb3IiKSkpCgojIE1ldGhvZCAoYSk6IGJyYWNrZXQgbm90YXRpb24KY2FmZVsgLCBjKCJOYW1lIiwgIldlZWtseV9QYXkiLCAiUGF5X0xldmVsIiwgIkV4cGVyaWVuY2VfTGV2ZWwiKV0KCiMgTWV0aG9kIChiKTogc2VsZWN0KCkKY2FmZSAlPiUgc2VsZWN0KE5hbWUsIFdlZWtseV9QYXksIFBheV9MZXZlbCwgRXhwZXJpZW5jZV9MZXZlbCk=",
+    "release_at": "2026-04-20T00:00:00+12:00"
+  },
+  {
+    "id": 14,
+    "week": 2,
+    "type": "R",
+    "title": "Lab 2 · arrange() — Sort Rows",
+    "scenario": "The manager wants to see who earns the most and also review staff by experience tier.",
+    "task": "Sort the café data frame two ways using <code>arrange()</code>:<br><br>(a) By <code>Weekly_Pay</code> — <strong>descending</strong><br>(b) By <code>Experience_Level</code> ascending, then <code>Weekly_Pay</code> <strong>descending</strong>",
+    "starter": "library(dplyr)\nName <- c(\"Tane\",\"Aroha\",\"Liam\",\"Mia\",\"Connor\",\"Priya\")\nRole <- as.factor(c(\"Barista\",\"Manager\",\"Barista\",\"Cashier\",\"Manager\",\"Cashier\"))\nHourly_Rate <- c(22,35,20,21,33,22)\nHours_Worked <- c(38,40,15,25,42,30)\ncafe <- data.frame(Name,Role,Hourly_Rate,Hours_Worked)\ncafe <- cafe %>% mutate(Weekly_Pay=Hourly_Rate*Hours_Worked,Annual_Pay=Weekly_Pay*52,\n  Pay_Level=as.factor(ifelse(Weekly_Pay>=600,\"High\",\"Low\")),\n  Experience_Level=as.factor(case_when(Hourly_Rate<22~\"Junior\",Hourly_Rate<30~\"Mid\",TRUE~\"Senior\")))\n\n# (a) Sort by Weekly_Pay descending\n\n# (b) Sort by Experience_Level then Weekly_Pay desc\n",
+    "solution": "bGlicmFyeShkcGx5cikKTmFtZSA8LSBjKCJUYW5lIiwiQXJvaGEiLCJMaWFtIiwiTWlhIiwiQ29ubm9yIiwiUHJpeWEiKQpSb2xlIDwtIGFzLmZhY3RvcihjKCJCYXJpc3RhIiwiTWFuYWdlciIsIkJhcmlzdGEiLCJDYXNoaWVyIiwiTWFuYWdlciIsIkNhc2hpZXIiKSkKSG91cmx5X1JhdGUgPC0gYygyMiwzNSwyMCwyMSwzMywyMikKSG91cnNfV29ya2VkIDwtIGMoMzgsNDAsMTUsMjUsNDIsMzApCmNhZmUgPC0gZGF0YS5mcmFtZShOYW1lLFJvbGUsSG91cmx5X1JhdGUsSG91cnNfV29ya2VkKQpjYWZlIDwtIGNhZmUgJT4lIG11dGF0ZShXZWVrbHlfUGF5PUhvdXJseV9SYXRlKkhvdXJzX1dvcmtlZCxBbm51YWxfUGF5PVdlZWtseV9QYXkqNTIsCiAgUGF5X0xldmVsPWFzLmZhY3RvcihpZmVsc2UoV2Vla2x5X1BheT49NjAwLCJIaWdoIiwiTG93IikpLAogIEV4cGVyaWVuY2VfTGV2ZWw9YXMuZmFjdG9yKGNhc2Vfd2hlbihIb3VybHlfUmF0ZTwyMn4iSnVuaW9yIixIb3VybHlfUmF0ZTwzMH4iTWlkIixUUlVFfiJTZW5pb3IiKSkpCgojIChhKSBTb3J0IGJ5IFdlZWtseV9QYXkgZGVzY2VuZGluZwpjYWZlICU+JSBhcnJhbmdlKGRlc2MoV2Vla2x5X1BheSkpCgojIChiKSBTb3J0IGJ5IEV4cGVyaWVuY2VfTGV2ZWwgdGhlbiBXZWVrbHlfUGF5IGRlc2NlbmRpbmcKY2FmZSAlPiUgYXJyYW5nZShFeHBlcmllbmNlX0xldmVsLCBkZXNjKFdlZWtseV9QYXkpKQ==",
+    "release_at": "2026-04-20T00:00:00+12:00"
+  },
+  {
+    "id": 15,
+    "week": 2,
+    "type": "R",
+    "title": "Lab 2 · BONUS — Complex Filtering & Bonus Pay",
+    "scenario": "Final challenge combining everything from Lab 2. Three separate tasks to complete.",
+    "task": "<strong>(a)</strong> Filter: Show rows where <code>Pay_Level == \"High\"</code> AND <code>Role != \"Manager\"</code><br><br><strong>(b)</strong> Calculate the average <code>Weekly_Pay</code> — expected answer: 684.5<br><br><strong>(c)</strong> Add a <code>Bonus</code> column: 10% of Weekly_Pay for Senior, 5% for everyone else. Select Name, Experience_Level, Weekly_Pay, Bonus.",
+    "starter": "library(dplyr)\nName <- c(\"Tane\",\"Aroha\",\"Liam\",\"Mia\",\"Connor\",\"Priya\")\nRole <- as.factor(c(\"Barista\",\"Manager\",\"Barista\",\"Cashier\",\"Manager\",\"Cashier\"))\nHourly_Rate <- c(22,35,20,21,33,22)\nHours_Worked <- c(38,40,15,25,42,30)\ncafe <- data.frame(Name,Role,Hourly_Rate,Hours_Worked)\ncafe <- cafe %>% mutate(Weekly_Pay=Hourly_Rate*Hours_Worked,Annual_Pay=Weekly_Pay*52,\n  Pay_Level=as.factor(ifelse(Weekly_Pay>=600,\"High\",\"Low\")),\n  Experience_Level=as.factor(case_when(Hourly_Rate<22~\"Junior\",Hourly_Rate<30~\"Mid\",TRUE~\"Senior\")))\n\n# (a) High Pay AND NOT Manager\n\n# (b) Average Weekly Pay\n\n# (c) Add Bonus and select columns\n",
+    "solution": "bGlicmFyeShkcGx5cikKTmFtZSA8LSBjKCJUYW5lIiwiQXJvaGEiLCJMaWFtIiwiTWlhIiwiQ29ubm9yIiwiUHJpeWEiKQpSb2xlIDwtIGFzLmZhY3RvcihjKCJCYXJpc3RhIiwiTWFuYWdlciIsIkJhcmlzdGEiLCJDYXNoaWVyIiwiTWFuYWdlciIsIkNhc2hpZXIiKSkKSG91cmx5X1JhdGUgPC0gYygyMiwzNSwyMCwyMSwzMywyMikKSG91cnNfV29ya2VkIDwtIGMoMzgsNDAsMTUsMjUsNDIsMzApCmNhZmUgPC0gZGF0YS5mcmFtZShOYW1lLFJvbGUsSG91cmx5X1JhdGUsSG91cnNfV29ya2VkKQpjYWZlIDwtIGNhZmUgJT4lIG11dGF0ZShXZWVrbHlfUGF5PUhvdXJseV9SYXRlKkhvdXJzX1dvcmtlZCxBbm51YWxfUGF5PVdlZWtseV9QYXkqNTIsCiAgUGF5X0xldmVsPWFzLmZhY3RvcihpZmVsc2UoV2Vla2x5X1BheT49NjAwLCJIaWdoIiwiTG93IikpLAogIEV4cGVyaWVuY2VfTGV2ZWw9YXMuZmFjdG9yKGNhc2Vfd2hlbihIb3VybHlfUmF0ZTwyMn4iSnVuaW9yIixIb3VybHlfUmF0ZTwzMH4iTWlkIixUUlVFfiJTZW5pb3IiKSkpCgojIChhKSBIaWdoIFBheSBBTkQgTk9UIE1hbmFnZXIKY2FmZSAlPiUgZmlsdGVyKFBheV9MZXZlbCA9PSAiSGlnaCIgJiBSb2xlICE9ICJNYW5hZ2VyIikKCiMgKGIpIEF2ZXJhZ2UgV2Vla2x5IFBheQptZWFuKGNhZmUkV2Vla2x5X1BheSkgICMgQW5zd2VyOiA2ODQuNQoKIyAoYykgQWRkIEJvbnVzIGNvbHVtbgpjYWZlIDwtIGNhZmUgJT4lIG11dGF0ZSgKICBCb251cyA9IGNhc2Vfd2hlbigKICAgIEV4cGVyaWVuY2VfTGV2ZWwgPT0gIlNlbmlvciIgfiBXZWVrbHlfUGF5ICogMC4xMCwKICAgIFRSVUUgICAgICAgICAgICAgICAgICAgICAgICAgfiBXZWVrbHlfUGF5ICogMC4wNQogICkKKQpjYWZlICU+JSBzZWxlY3QoTmFtZSwgRXhwZXJpZW5jZV9MZXZlbCwgV2Vla2x5X1BheSwgQm9udXMp",
+    "release_at": "2026-04-20T00:00:00+12:00"
+  },
+  {
+    "id": 16,
+    "week": 3,
+    "type": "R",
+    "title": "Week 3 Preview — Coming Soon",
+    "scenario": "This question will be released with Week 3 lab materials.",
+    "task": "Check back after Week 3 lectures. Topics will include statistical analysis and visualisation with ggplot2.",
+    "starter": "# Week 3 content coming soon\n",
+    "solution": "IyBXZWVrIDMgY29udGVudCBjb21pbmcgc29vbg==",
+    "release_at": "2026-04-27T00:00:00+12:00"
+  },
+  {
+    "id": 101,
+    "week": 1,
+    "type": "Excel",
+    "title": "Monte Carlo — Basic Setup",
+    "scenario": "You are building a Monte Carlo simulation in Excel to model Emily's superannuation growth under uncertainty. Emily earns $60,000/year with a standard deviation of $8,000.",
+    "task": "<strong>Setup steps:</strong><br><ol><li>In cell <code>B1</code>: mean salary = <code>60000</code></li><li>In cell <code>B2</code>: std dev = <code>8000</code></li><li>In <code>A2:A1001</code>, enter the formula to generate 1,000 random normal draws:<br><code>=NORM.INV(RAND(), $B$1, $B$2)</code></li><li>Press <code>F9</code> to recalculate and observe the distribution changing</li></ol>",
+    "starter": "# Formula notes (write the key Excel formulas here)\n# Monte Carlo in A2:A1001\nformula <- \"=NORM.INV(RAND(), $B$1, $B$2)\"\n\n# Check mean of simulation (in Excel: =AVERAGE(A2:A1001))\n# Check std dev: =STDEV(A2:A1001)\n",
+    "solution": "IyBNb250ZSBDYXJsbyBTZXR1cCBTdGVwcyAoRXhjZWwpCiMgMS4gQ3JlYXRlIGlucHV0IGNlbGxzOiBtZWFuID0gNjAwMDAsIHNkID0gODAwMCwgbiA9IDEwMDAKIyAyLiBJbiBjb2x1bW4gQSAoQTI6QTEwMDEpOiA9Tk9STS5JTlYoUkFORCgpLCAkQiQxLCAkQiQyKQojIDMuIFRoaXMgZ2VuZXJhdGVzIDEwMDAgcmFuZG9tIHNhbGFyeSBkcmF3cwojIDQuIFByZXNzIEY5IHRvIHJlY2FsY3VsYXRlIGFuZCBvYnNlcnZlIGRpc3RyaWJ1dGlvbiBjaGFuZ2U=",
+    "release_at": "2026-04-13T00:00:00+12:00"
+  },
+  {
+    "id": 102,
+    "week": 1,
+    "type": "Excel",
+    "title": "Scenario Analysis — IF & Named Cells",
+    "scenario": "Emily's growth rate varies by economic scenario. Model three scenarios with Excel formulas.",
+    "task": "<strong>In Excel:</strong><br><ol><li>Cell <code>B5</code>: type scenario label (<code>\"base\"</code>, <code>\"pessimistic\"</code>, or <code>\"optimistic\"</code>)</li><li>Base return: <code>=B2*1.02</code></li><li>Pessimistic: <code>=B2*0.98</code></li><li>Optimistic: <code>=B2*1.05</code></li><li>Combine with <code>IF()</code> nesting or <code>SWITCH()</code></li></ol>",
+    "starter": "# Note the Excel IF logic here:\n# =IF(B5=\"pessimistic\", B2*0.98,\n#    IF(B5=\"optimistic\", B2*1.05, B2*1.02))\n\n# Or using SWITCH:\n# =SWITCH(B5, \"pessimistic\", B2*0.98,\n#             \"optimistic\",  B2*1.05,\n#             B2*1.02)\n",
+    "solution": "IyBTY2VuYXJpbyBBbmFseXNpcyAoRXhjZWwpCiMgMS4gQmFzZSBjYXNlOiA9QjIqQjMgKHNhbGFyeSAqIGdyb3d0aF9yYXRlKQojIDIuIFBlc3NpbWlzdGljOiA9QjIqMC45OAojIDMuIE9wdGltaXN0aWM6ICA9QjIqMS4wNQojIDQuIFVzZSBJRiBmb3IgY29uZGl0aW9uYWwgc2NlbmFyaW9zOgojICAgID1JRihCNT0icGVzc2ltaXN0aWMiLCBCMiowLjk4LCBJRihCNT0ib3B0aW1pc3RpYyIsIEIyKjEuMDUsIEIyKjEuMDIpKQ==",
+    "release_at": "2026-04-13T00:00:00+12:00"
+  },
+  {
+    "id": 103,
+    "week": 2,
+    "type": "Excel",
+    "title": "Glide Path — Dynamic Asset Allocation",
+    "scenario": "Emily is 30 years old. As she ages, her portfolio should shift from high-growth (SkyHigh) to stable (HarbourSafe) funds — a strategy called a Glide Path.",
+    "task": "<strong>Build a Glide Path table (rows = age 30 to 65):</strong><br><ol><li>Column A: Age 30 to 65</li><li>Column B — SkyHigh %: <code>=MAX(0, 1 - (A2-30)/35)</code></li><li>Column C — HarbourSafe %: <code>=1-B2</code></li><li>Column D — Expected return: <code>=B2*0.09 + C2*0.04</code></li><li>Column E — Portfolio value: starts at $50,000, grows by return + $5,000 annual contribution</li></ol>",
+    "starter": "# Glide Path key formulas:\n# SkyHigh allocation: =MAX(0, 1-(A2-30)/35)\n# HarbourSafe:        =1-B2\n# Expected return:    =B2*0.09 + C2*0.04\n# Portfolio value:    =E1*(1+D2) + 5000\n\n# Simulate in R:\nages <- 30:65\nskyhigh <- pmax(0, 1 - (ages - 30)/35)\nharboursafe <- 1 - skyhigh\nexpected_return <- skyhigh * 0.09 + harboursafe * 0.04\ndata.frame(Age = ages, SkyHigh = round(skyhigh,2),\n           HarbourSafe = round(harboursafe,2),\n           Return = round(expected_return,4))\n",
+    "solution": "IyBHbGlkZSBQYXRoIFNpbXVsYXRpb24gKEV4Y2VsKQojIDEuIENvbHVtbiBBOiBBZ2UgKDMwIHRvIDY1KQojIDIuIENvbHVtbiBCOiBTa3lIaWdoIGFsbG9jYXRpb24gPSBNQVgoMCwgMSAtIChBMi0zMCkvMzUpCiMgMy4gQ29sdW1uIEM6IEhhcmJvdXJTYWZlID0gMSAtIEIyCiMgNC4gQ29sdW1uIEQ6IEFubnVhbCByZXR1cm4gPSBCMiowLjA5ICsgQzIqMC4wNCAoZXhwZWN0ZWQgcmV0dXJuKQojIDUuIENvbHVtbiBFOiBQb3J0Zm9saW8gdmFsdWUgPSBFMSooMStEMikgKyBhbm51YWxfY29udHJpYnV0aW9u",
+    "release_at": "2026-04-20T00:00:00+12:00"
+  },
+  {
+    "id": 104,
+    "week": 3,
+    "type": "Excel",
+    "title": "Week 3 Preview — Coming Soon",
+    "scenario": "Week 3 Excel content will cover advanced Monte Carlo scenarios including retirement risk modelling.",
+    "task": "Check back after Week 3 lectures for the full simulation assignment prep.",
+    "starter": "# Week 3 Excel content coming soon\n",
+    "solution": "IyBXZWVrIDMgY29udGVudCBjb21pbmcgc29vbg==",
+    "release_at": "2026-04-27T00:00:00+12:00"
+  }
+]
