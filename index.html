@@ -342,7 +342,14 @@ const LABS = {
       <ol>
         <li>Replace any <strong>negative</strong> <code>Hours_Worked</code> value with a <strong>missing value</strong></li>
         <li>Print <code>cafe</code> to confirm the change</li>
-      </ol>`,
+      </ol>
+      <div class="exp-box"><strong>Expected output</strong><pre>    Name    Role Hourly_Rate Hours_Worked
+1   Tane Barista          22           38
+2  Aroha Manager          35           40
+3   Liam Barista          20           NA
+4    Mia Cashier          21           25
+5 Connor Manager          33           42
+6  Priya Cashier          22           30</pre></div>`,
     check: `
       ok <- TRUE; msg <- character(0)
       if (!exists("cafe"))
@@ -364,7 +371,12 @@ const LABS = {
         <li>Remove the row where <code>Hours_Worked</code> is <strong>missing</strong>. Save back to <code>cafe</code></li>
         <li>How many rows does <code>cafe</code> now have?</li>
       </ol>
-      <div class="exp-box"><strong>Expected:</strong> 5 rows (Liam is temporarily removed)</div>`,
+      <div class="exp-box"><strong>Expected output</strong><pre>    Name    Role Hourly_Rate Hours_Worked
+1   Tane Barista          22           38
+2  Aroha Manager          35           40
+3    Mia Cashier          21           25
+4 Connor Manager          33           42
+5  Priya Cashier          22           30</pre></div>`,
     check: `
       ok <- TRUE; msg <- character(0)
       if (!exists("cafe"))
@@ -384,7 +396,13 @@ const LABS = {
       <p>Liam's correct hours have been confirmed as <strong>15</strong>. Add him back to <code>cafe</code>.</p>
       <ul><li>Name = "Liam", Role = "Barista", Hourly_Rate = 20, Hours_Worked = 15</li></ul>
       <p>Make sure <code>Role</code> is still stored as a categorical variable after adding.</p>
-      <div class="exp-box"><strong>Expected:</strong> 6 rows again, Liam at the bottom with Hours_Worked = 15</div>`,
+      <div class="exp-box"><strong>Expected output</strong><pre>    Name    Role Hourly_Rate Hours_Worked
+1   Tane Barista          22           38
+2  Aroha Manager          35           40
+3    Mia Cashier          21           25
+4 Connor Manager          33           42
+5  Priya Cashier          22           30
+6   Liam Barista          20           15</pre></div>`,
     check: `
       ok <- TRUE; msg <- character(0)
       if (!exists("cafe"))
@@ -408,7 +426,13 @@ const LABS = {
       <h2><span class="q-num">6</span> Compute New Variables</h2>
       <p>Add three new columns to <code>cafe</code> at once: <code>Weekly_Pay</code>, <code>Annual_Pay</code>, and <code>Pay_Level</code>.</p>
       <p><code>Pay_Level</code> should be <strong>"High"</strong> if <code>Weekly_Pay >= 600</code>, otherwise <strong>"Low"</strong>, stored as a categorical variable.</p>
-      <div class="exp-box"><strong>Expected Weekly_Pay values</strong><pre>Tane: 836 | Aroha: 1400 | Mia: 525 | Connor: 1386 | Priya: 660 | Liam: 300</pre></div>`,
+      <div class="exp-box"><strong>Expected output</strong><pre>    Name    Role Hourly_Rate Hours_Worked Weekly_Pay Annual_Pay Pay_Level
+1   Tane Barista          22           38        836      43472      High
+2  Aroha Manager          35           40       1400      72800      High
+3    Mia Cashier          21           25        525      27300       Low
+4 Connor Manager          33           42       1386      72072      High
+5  Priya Cashier          22           30        660      34320      High
+6   Liam Barista          20           15        300      15600       Low</pre></div>`,
     check: `
       ok <- TRUE; msg <- character(0)
       if (!exists("cafe")) {
