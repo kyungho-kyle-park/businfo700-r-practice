@@ -102,9 +102,9 @@
       width: 30px; height: 30px; background: var(--navy);
       color: white; border-radius: 50%; font-weight: 700; font-size: 0.95em; flex-shrink: 0;
     }
-    .question-panel p  { font-size: 0.9em; line-height: 1.65; margin-bottom: 8px; }
+    .question-panel p  { font-size: 1.05em; line-height: 1.65; margin-bottom: 8px; }
     .question-panel ol,
-    .question-panel ul { font-size: 0.9em; line-height: 1.8; margin: 6px 0 6px 18px; }
+    .question-panel ul { font-size: 1.05em; line-height: 1.8; margin: 6px 0 6px 18px; }
     .question-panel code {
       background: #1a3a5c; color: #ffd580;
       padding: 1px 5px; border-radius: 3px; font-size: 0.88em;
@@ -145,7 +145,7 @@
       padding: 11px 13px; border: 1px solid var(--border);
       border-radius: 5px; resize: none;
       background: #1e1e2e; color: #cdd6f4; line-height: 1.6;
-      tab-size: 2;
+      tab-size: 2; min-height: 0;
     }
     #code-editor:focus { outline: 2px solid var(--gold); border-color: transparent; }
 
@@ -162,7 +162,7 @@
     .btn-reset  { background: #e2e8f0; color: #555; }
     .shortcut   { font-size: 0.76em; color: #aaa; margin-left: 4px; }
 
-    .output-wrap { flex-shrink: 0; display: flex; flex-direction: column; max-height: 160px; }
+    .output-wrap { flex: 1; display: flex; flex-direction: column; min-height: 0; }
     #output {
       background: #1e1e2e; color: #cdd6f4;
       font-family: 'Courier New', monospace; font-size: 0.82em;
@@ -193,8 +193,8 @@
 
 <div id="loading">
   <div class="spinner"></div>
-  <h2>R 환경 초기화 중...</h2>
-  <p id="loading-msg">WebR 로드 중...</p>
+  <h2>Setting up R environment...</h2>
+  <p id="loading-msg">Loading WebR...</p>
 </div>
 
 <header>
@@ -203,8 +203,8 @@
 </header>
 
 <div class="notice">
-  dplyr 패키지가 사전 로드되어 있습니다. <code>library()</code> 호출 없이 바로 사용 가능합니다.
-  &nbsp;|&nbsp; <strong>Ctrl + Enter</strong> 로 코드 실행
+  dplyr, tidyr, ggplot2 and more are pre-loaded — no <code>library()</code> calls needed.
+  &nbsp;|&nbsp; <strong>Ctrl + Enter</strong> to run code
 </div>
 
 <div class="layout">
@@ -273,18 +273,18 @@ const STEPS = [
     check: `
       ok <- TRUE; msg <- character(0)
       if (!exists("cafe")) {
-        ok <- FALSE; msg <- c(msg, "cafe 데이터프레임이 없습니다.")
+        ok <- FALSE; msg <- c(msg, "cafe data frame not found.")
       } else {
         if (nrow(cafe) != 6)
-          { ok <- FALSE; msg <- c(msg, paste0("행 수 ", nrow(cafe), " (예상: 6)")) }
+          { ok <- FALSE; msg <- c(msg, paste0("Row count: ", nrow(cafe), " (expected: 6)")) }
         needed <- c("Name","Role","Hourly_Rate","Hours_Worked")
         missing_cols <- needed[!needed %in% names(cafe)]
         if (length(missing_cols) > 0)
-          { ok <- FALSE; msg <- c(msg, paste("컬럼 없음:", paste(missing_cols, collapse=", "))) }
+          { ok <- FALSE; msg <- c(msg, paste("Missing columns:", paste(missing_cols, collapse=", "))) }
         else if (!is.factor(cafe$Role))
-          { ok <- FALSE; msg <- c(msg, "Role이 factor가 아닙니다.") }
+          { ok <- FALSE; msg <- c(msg, "Role is not a factor. Try as.factor().") }
       }
-      if (ok) "PASS:  cafe 데이터프레임이 올바르게 만들어졌습니다!" else paste("FAIL:", paste(msg, collapse=" | "))`
+      if (ok) "PASS:  cafe data frame looks correct!" else paste("FAIL:", paste(msg, collapse=" | "))`
   },
   {
     id: 2, label: 'Inspect Categorical Variable',
@@ -300,12 +300,12 @@ const STEPS = [
     check: `
       ok <- TRUE; msg <- character(0)
       if (!exists("cafe"))
-        { ok <- FALSE; msg <- c(msg, "cafe가 없습니다. Step 1을 먼저 완료하세요.") }
+        { ok <- FALSE; msg <- c(msg, "cafe not found. Complete Step 1 first.") }
       else if (!is.factor(cafe$Role))
-        { ok <- FALSE; msg <- c(msg, "Role이 factor가 아닙니다.") }
+        { ok <- FALSE; msg <- c(msg, "Role is not a factor.") }
       else if (nlevels(cafe$Role) != 3)
-        { ok <- FALSE; msg <- c(msg, paste0("Role category 수: ", nlevels(cafe$Role), " (예상: 3)")) }
-      if (ok) "PASS:  Role 변수 확인 완료!" else paste("FAIL:", paste(msg, collapse=" | "))`
+        { ok <- FALSE; msg <- c(msg, paste0("Role has ", nlevels(cafe$Role), " levels (expected: 3)")) }
+      if (ok) "PASS:  Role variable looks correct!" else paste("FAIL:", paste(msg, collapse=" | "))`
   },
   {
     id: 3, label: 'Handle Invalid Data',
@@ -319,14 +319,14 @@ const STEPS = [
     check: `
       ok <- TRUE; msg <- character(0)
       if (!exists("cafe"))
-        { ok <- FALSE; msg <- c(msg, "cafe가 없습니다.") }
+        { ok <- FALSE; msg <- c(msg, "cafe not found.") }
       else {
         if (any(cafe$Hours_Worked < 0, na.rm = TRUE))
-          { ok <- FALSE; msg <- c(msg, "아직 음수 값이 남아있습니다.") }
+          { ok <- FALSE; msg <- c(msg, "Negative values still exist.") }
         if (!any(is.na(cafe$Hours_Worked)))
-          { ok <- FALSE; msg <- c(msg, "NA로 변환된 값이 없습니다.") }
+          { ok <- FALSE; msg <- c(msg, "No NA values found — replace negatives with NA.") }
       }
-      if (ok) "PASS:  음수 값이 NA로 변환됐습니다!" else paste("FAIL:", paste(msg, collapse=" | "))`
+      if (ok) "PASS:  Negative value replaced with NA!" else paste("FAIL:", paste(msg, collapse=" | "))`
   },
   {
     id: 4, label: 'Remove Invalid Row',
@@ -341,14 +341,14 @@ const STEPS = [
     check: `
       ok <- TRUE; msg <- character(0)
       if (!exists("cafe"))
-        { ok <- FALSE; msg <- c(msg, "cafe가 없습니다.") }
+        { ok <- FALSE; msg <- c(msg, "cafe not found.") }
       else {
         if (any(is.na(cafe$Hours_Worked)))
-          { ok <- FALSE; msg <- c(msg, "NA 행이 아직 남아있습니다.") }
+          { ok <- FALSE; msg <- c(msg, "NA row still exists.") }
         if (nrow(cafe) != 5)
-          { ok <- FALSE; msg <- c(msg, paste0("행 수: ", nrow(cafe), " (예상: 5)")) }
+          { ok <- FALSE; msg <- c(msg, paste0("Row count: ", nrow(cafe), " (expected: 5)")) }
       }
-      if (ok) "PASS:  NA 행 제거 완료, 5개 행 확인!" else paste("FAIL:", paste(msg, collapse=" | "))`
+      if (ok) "PASS:  NA row removed. 5 rows confirmed!" else paste("FAIL:", paste(msg, collapse=" | "))`
   },
   {
     id: 5, label: 'Add Corrected Row Back',
@@ -361,19 +361,19 @@ const STEPS = [
     check: `
       ok <- TRUE; msg <- character(0)
       if (!exists("cafe"))
-        { ok <- FALSE; msg <- c(msg, "cafe가 없습니다.") }
+        { ok <- FALSE; msg <- c(msg, "cafe not found.") }
       else {
         if (nrow(cafe) != 6)
-          { ok <- FALSE; msg <- c(msg, paste0("행 수: ", nrow(cafe), " (예상: 6)")) }
+          { ok <- FALSE; msg <- c(msg, paste0("Row count: ", nrow(cafe), " (expected: 6)")) }
         liam <- cafe[cafe$Name == "Liam", ]
         if (nrow(liam) == 0)
-          { ok <- FALSE; msg <- c(msg, "Liam 행을 찾을 수 없습니다.") }
+          { ok <- FALSE; msg <- c(msg, "Liam row not found.") }
         else if (!any(liam$Hours_Worked == 15, na.rm = TRUE))
-          { ok <- FALSE; msg <- c(msg, "Liam의 Hours_Worked가 15가 아닙니다.") }
+          { ok <- FALSE; msg <- c(msg, "Liam's Hours_Worked is not 15.") }
         if (!is.factor(cafe$Role))
-          { ok <- FALSE; msg <- c(msg, "Role이 factor가 아닙니다. 행 추가 후 다시 변환하세요.") }
+          { ok <- FALSE; msg <- c(msg, "Role is not a factor. Re-apply as.factor() after add_row().") }
       }
-      if (ok) "PASS:  Liam이 올바르게 추가됐습니다!" else paste("FAIL:", paste(msg, collapse=" | "))`
+      if (ok) "PASS:  Liam added back correctly!" else paste("FAIL:", paste(msg, collapse=" | "))`
   },
   {
     id: 6, label: 'Compute New Variables',
@@ -385,27 +385,27 @@ const STEPS = [
     check: `
       ok <- TRUE; msg <- character(0)
       if (!exists("cafe")) {
-        ok <- FALSE; msg <- c(msg, "cafe가 없습니다.")
+        ok <- FALSE; msg <- c(msg, "cafe not found.")
       } else {
         cn <- tolower(names(cafe))
         if (!"weekly_pay" %in% cn) {
-          ok <- FALSE; msg <- c(msg, "Weekly_Pay 컬럼이 없습니다.")
+          ok <- FALSE; msg <- c(msg, "Weekly_Pay column missing.")
         } else {
           wpc <- names(cafe)[cn == "weekly_pay"][1]
           expected <- sort(c(836, 1400, 525, 1386, 660, 300))
           actual   <- sort(as.numeric(cafe[[wpc]]))
           if (!identical(expected, actual))
-            { ok <- FALSE; msg <- c(msg, "Weekly_Pay 값이 올바르지 않습니다.") }
+            { ok <- FALSE; msg <- c(msg, "Weekly_Pay values are incorrect.") }
         }
         if (!"annual_pay" %in% cn)
-          { ok <- FALSE; msg <- c(msg, "Annual_Pay 컬럼이 없습니다.") }
+          { ok <- FALSE; msg <- c(msg, "Annual_Pay column missing.") }
         plc <- names(cafe)[cn %in% c("pay_level","pay_level")]
         if (length(plc) == 0)
-          { ok <- FALSE; msg <- c(msg, "Pay_Level 컬럼이 없습니다.") }
+          { ok <- FALSE; msg <- c(msg, "Pay_Level column missing.") }
         else if (!is.factor(cafe[[plc[1]]]))
-          { ok <- FALSE; msg <- c(msg, "Pay_Level이 factor가 아닙니다.") }
+          { ok <- FALSE; msg <- c(msg, "Pay_Level is not a factor.") }
       }
-      if (ok) "PASS:  Weekly_Pay, Annual_Pay, Pay_Level 모두 올바릅니다!" else paste("FAIL:", paste(msg, collapse=" | "))`
+      if (ok) "PASS:  Weekly_Pay, Annual_Pay, Pay_Level all correct!" else paste("FAIL:", paste(msg, collapse=" | "))`
   },
   {
     id: 7, label: 'Recode Variables',
@@ -423,11 +423,11 @@ const STEPS = [
     check: `
       ok <- TRUE; msg <- character(0)
       if (!exists("cafe")) {
-        ok <- FALSE; msg <- c(msg, "cafe가 없습니다.")
+        ok <- FALSE; msg <- c(msg, "cafe not found.")
       } else {
         ecol <- names(cafe)[grepl("experience", tolower(names(cafe)))]
         if (length(ecol) == 0) {
-          ok <- FALSE; msg <- c(msg, "Experience_Level 컬럼이 없습니다.")
+          ok <- FALSE; msg <- c(msg, "Experience_Level column missing.")
         } else {
           ec <- ecol[1]
           checks <- list(
@@ -439,12 +439,12 @@ const STEPS = [
           for (ch in checks) {
             row <- cafe[cafe$Name == ch$name, ec]
             if (length(row) > 0 && as.character(row[1]) != ch$expected)
-              msg <- c(msg, paste0(ch$name, ": ", row[1], " (예상: ", ch$expected, ")"))
+              msg <- c(msg, paste0(ch$name, ": ", row[1], " (expected: ", ch$expected, ")"))
           }
           if (length(msg) > 0) ok <- FALSE
         }
       }
-      if (ok) "PASS:  Experience_Level이 올바르게 분류됐습니다!" else paste("FAIL:", paste(msg, collapse=" | "))`
+      if (ok) "PASS:  Experience_Level classified correctly!" else paste("FAIL:", paste(msg, collapse=" | "))`
   },
   {
     id: 8, label: 'Display Specific Columns',
@@ -462,15 +462,15 @@ const STEPS = [
     check: `
       ok <- TRUE; msg <- character(0)
       if (!exists("cafe"))
-        { ok <- FALSE; msg <- c(msg, "cafe가 없습니다. 이전 Step들을 완료하세요.") }
+        { ok <- FALSE; msg <- c(msg, "cafe not found. Complete previous steps first.") }
       else {
         cn <- tolower(names(cafe))
         if (!"weekly_pay" %in% cn)
-          { ok <- FALSE; msg <- c(msg, "Weekly_Pay 없음 — Step 6을 완료하세요.") }
+          { ok <- FALSE; msg <- c(msg, "Weekly_Pay missing — complete Step 6 first.") }
         if (!any(grepl("experience", cn)))
-          { ok <- FALSE; msg <- c(msg, "Experience_Level 없음 — Step 7을 완료하세요.") }
+          { ok <- FALSE; msg <- c(msg, "Experience_Level missing — complete Step 7 first.") }
       }
-      if (ok) "PASS:  코드를 실행해 출력 결과를 직접 확인하세요!" else paste("FAIL:", paste(msg, collapse=" | "))`
+      if (ok) "PASS:  Run your code and verify the output looks correct!" else paste("FAIL:", paste(msg, collapse=" | "))`
   },
   {
     id: 9, label: 'Sort the Data',
@@ -490,20 +490,20 @@ const STEPS = [
     check: `
       ok <- TRUE; msg <- character(0)
       if (!exists("cafe"))
-        { ok <- FALSE; msg <- c(msg, "cafe가 없습니다.") }
+        { ok <- FALSE; msg <- c(msg, "cafe not found.") }
       else {
         wpc <- names(cafe)[tolower(names(cafe)) == "weekly_pay"]
         if (length(wpc) == 0) {
-          ok <- FALSE; msg <- c(msg, "Weekly_Pay 없음 — Step 6을 완료하세요.")
+          ok <- FALSE; msg <- c(msg, "Weekly_Pay missing — complete Step 6 first.")
         } else {
           s <- cafe[order(-cafe[[wpc[1]]]), ]
           if (as.character(s$Name[1]) != "Aroha")
-            { ok <- FALSE; msg <- c(msg, paste0("1위: ", s$Name[1], " (예상: Aroha)")) }
+            { ok <- FALSE; msg <- c(msg, paste0("1st row: ", s$Name[1], " (expected: Aroha)")) }
           if (as.character(s$Name[nrow(s)]) != "Liam")
-            { ok <- FALSE; msg <- c(msg, paste0("꼴찌: ", s$Name[nrow(s)], " (예상: Liam)")) }
+            { ok <- FALSE; msg <- c(msg, paste0("Last row: ", s$Name[nrow(s)], " (expected: Liam)")) }
         }
       }
-      if (ok) "PASS:  정렬 완료!" else paste("FAIL:", paste(msg, collapse=" | "))`
+      if (ok) "PASS:  Sorted correctly!" else paste("FAIL:", paste(msg, collapse=" | "))`
   },
   {
     id: 'B', label: 'Bonus Challenge',
@@ -518,18 +518,18 @@ const STEPS = [
     check: `
       ok <- TRUE; msg <- character(0)
       if (!exists("cafe"))
-        { ok <- FALSE; msg <- c(msg, "cafe가 없습니다.") }
+        { ok <- FALSE; msg <- c(msg, "cafe not found.") }
       else {
         wpc <- names(cafe)[tolower(names(cafe)) == "weekly_pay"]
         if (length(wpc) > 0) {
           avg <- mean(cafe[[wpc[1]]], na.rm = TRUE)
           if (abs(avg - 684.5) > 0.5)
-            { ok <- FALSE; msg <- c(msg, paste0("평균 Weekly_Pay: ", round(avg, 1), " (예상: 684.5)")) }
-        } else { ok <- FALSE; msg <- c(msg, "Weekly_Pay 없음.") }
+            { ok <- FALSE; msg <- c(msg, paste0("Average Weekly_Pay: ", round(avg, 1), " (expected: 684.5)")) }
+        } else { ok <- FALSE; msg <- c(msg, "Weekly_Pay column missing.") }
         if (!"Bonus" %in% names(cafe))
-          { ok <- FALSE; msg <- c(msg, "Bonus 컬럼이 없습니다.") }
+          { ok <- FALSE; msg <- c(msg, "Bonus column missing.") }
       }
-      if (ok) "PASS:  보너스 챌린지 완료!" else paste("FAIL:", paste(msg, collapse=" | "))`
+      if (ok) "PASS:  Bonus challenge complete!" else paste("FAIL:", paste(msg, collapse=" | "))`
   }
 ];
 
@@ -542,16 +542,16 @@ const completed = new Set();
 
 async function init() {
   const msg = document.getElementById('loading-msg');
-  msg.textContent = 'WebR 로드 중...';
+  msg.textContent = 'Loading WebR...';
   await webR.init();
 
   const packages = ['dplyr', 'tibble', 'tidyr', 'ggplot2', 'readr', 'stringr', 'lubridate', 'scales'];
   for (const pkg of packages) {
-    msg.textContent = `패키지 설치 중: ${pkg} (최초 1회만 다운로드, 이후 캐시)`;
+    msg.textContent = `Installing: ${pkg} (first load only — cached after this)`;
     await webR.installPackages([pkg]);
   }
 
-  msg.textContent = '패키지 로드 중...';
+  msg.textContent = 'Loading packages...';
   await webR.evalR(`
     suppressMessages(library(dplyr))
     suppressMessages(library(tibble))
