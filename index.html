@@ -45,6 +45,13 @@
     }
     header h1 { font-size: 1.05em; font-weight: 700; letter-spacing: 0.02em; }
     header .sub { font-size: 0.82em; color: #aac4e0; }
+    #lab-select {
+      background: rgba(255,255,255,0.12); color: white;
+      border: 1px solid rgba(255,255,255,0.3); border-radius: 5px;
+      padding: 5px 10px; font-size: 0.88em; font-weight: 600;
+      cursor: pointer; outline: none;
+    }
+    #lab-select option { background: #003865; color: white; }
 
     /* ── Layout ── */
     .layout { display: flex; flex: 1; overflow: hidden; }
@@ -199,7 +206,8 @@
 
 <header>
   <h1>BUSINFO 700 · R Practice</h1>
-  <span class="sub">Auckland Café Staff · Data Manipulation · Kyungho Kyle Park</span>
+  <select id="lab-select" onchange="switchLab(this.value)"></select>
+  <span class="sub">Kyungho Kyle Park</span>
 </header>
 
 <div class="notice">
@@ -241,9 +249,11 @@
 import { WebR } from 'https://webr.r-wasm.org/latest/webr.mjs';
 
 // ─────────────────────────────────────────────
-// Step definitions
+// Lab definitions
+// To add a new lab: append an entry to LABS below.
 // ─────────────────────────────────────────────
-const STEPS = [
+const LABS = {
+  'Lab 2: Data Manipulation': { steps: [
   {
     id: 1, label: 'Create Data Frame',
     content: `
@@ -531,14 +541,18 @@ const STEPS = [
       }
       if (ok) "PASS:  Bonus challenge complete!" else paste("FAIL:", paste(msg, collapse=" | "))`
   }
-];
+  ]},
+  // ── Add new labs below this line ──────────────────────────────────────────
+  // 'Lab 3: Visualization': { steps: [ ... ] },
+};
 
 // ─────────────────────────────────────────────
 // WebR init
 // ─────────────────────────────────────────────
 const webR = new WebR();
-let currentStep = 0;
-const completed = new Set();
+let currentLabKey = Object.keys(LABS)[0];
+let currentStep   = 0;
+const completed   = {};  // { labKey: Set }
 
 async function init() {
   const msg = document.getElementById('loading-msg');
@@ -563,6 +577,7 @@ async function init() {
     suppressMessages(library(scales))
   `);
   document.getElementById('loading').style.display = 'none';
+  buildLabSelect();
   buildNav();
   showStep(0);
 }
@@ -570,15 +585,36 @@ async function init() {
 // ─────────────────────────────────────────────
 // UI
 // ─────────────────────────────────────────────
+function buildLabSelect() {
+  const sel = document.getElementById('lab-select');
+  Object.keys(LABS).forEach(key => {
+    const opt = document.createElement('option');
+    opt.value = key;
+    opt.textContent = key;
+    sel.appendChild(opt);
+  });
+}
+
+function switchLab(key) {
+  currentLabKey = key;
+  currentStep   = 0;
+  buildNav();
+  showStep(0);
+}
+
 function buildNav() {
   const nav = document.getElementById('step-nav');
-  STEPS.forEach((s, i) => {
+  nav.innerHTML = '';
+  const steps = LABS[currentLabKey].steps;
+  if (!completed[currentLabKey]) completed[currentLabKey] = new Set();
+  steps.forEach((s, i) => {
     const li = document.createElement('li');
+    const isDone = completed[currentLabKey].has(i);
     li.innerHTML = `
-      <button onclick="showStep(${i})" id="nav-btn-${i}">
+      <button onclick="showStep(${i})" id="nav-btn-${i}" class="${isDone ? 'done' : ''}">
         <span class="step-badge" id="badge-${i}">${s.id}</span>
         <span class="step-label">${s.label}</span>
-        <span class="tick" id="tick-${i}"></span>
+        <span class="tick" id="tick-${i}">${isDone ? '✓' : ''}</span>
       </button>`;
     nav.appendChild(li);
   });
@@ -586,10 +622,11 @@ function buildNav() {
 
 function showStep(index) {
   currentStep = index;
+  const steps = LABS[currentLabKey].steps;
   document.querySelectorAll('.step-nav button').forEach((b, i) => {
     b.classList.toggle('active', i === index);
   });
-  document.getElementById('question-panel').innerHTML = STEPS[index].content;
+  document.getElementById('question-panel').innerHTML = steps[index].content;
   document.getElementById('code-editor').value = '';
   document.getElementById('output').textContent = '— run your code to see output —';
   document.getElementById('output').className = '';
@@ -654,13 +691,14 @@ async function checkAnswer() {
   btn.textContent = '⏳';
   const cr = document.getElementById('check-result');
   try {
-    const result = await webR.evalR(STEPS[currentStep].check);
+    const steps = LABS[currentLabKey].steps;
+    const result = await webR.evalR(steps[currentStep].check);
     const js = await result.toJs();
     const msg = js.values[0];
     if (msg.startsWith('PASS')) {
       cr.className = 'check-result pass';
       cr.textContent = '✓ ' + msg.replace('PASS:', '').trim();
-      completed.add(currentStep);
+      completed[currentLabKey].add(currentStep);
       document.getElementById(`tick-${currentStep}`).textContent = '✓';
       document.getElementById(`nav-btn-${currentStep}`).classList.add('done');
     } else {
@@ -690,8 +728,9 @@ document.getElementById('code-editor').addEventListener('keydown', e => {
 });
 
 // expose globals
-window.showStep = showStep;
-window.runCode = runCode;
+window.showStep   = showStep;
+window.switchLab  = switchLab;
+window.runCode    = runCode;
 window.checkAnswer = checkAnswer;
 window.resetEditor = resetEditor;
 
