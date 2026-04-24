@@ -96,8 +96,22 @@
     /* Question panel */
     .question-panel {
       background: white; border-bottom: 1px solid var(--border);
-      padding: 18px 24px; overflow-y: auto;
-      max-height: 42%; flex-shrink: 0;
+      display: flex; flex-direction: row;
+      max-height: 44%; flex-shrink: 0; overflow: hidden;
+    }
+    .q-content {
+      flex: 0 0 60%; padding: 18px 20px 18px 24px;
+      overflow-y: auto; border-right: 1px solid var(--border);
+    }
+    .q-expected {
+      flex: 0 0 40%; padding: 16px 18px;
+      overflow-y: auto; background: #f8fafc;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .q-expected-label {
+      font-size: 0.76em; font-weight: 700; color: #888;
+      text-transform: uppercase; letter-spacing: 0.07em;
+      margin-bottom: 2px;
     }
     .question-panel h2 {
       color: var(--navy); font-size: 1.05em;
@@ -223,7 +237,10 @@
   </nav>
 
   <div class="main">
-    <div class="question-panel" id="question-panel"></div>
+    <div class="question-panel">
+      <div class="q-content"  id="q-content"></div>
+      <div class="q-expected" id="q-expected"></div>
+    </div>
     <div class="editor-panel">
       <div class="editor-wrap">
         <div class="panel-label">Your Code</div>
@@ -626,7 +643,22 @@ function showStep(index) {
   document.querySelectorAll('.step-nav button').forEach((b, i) => {
     b.classList.toggle('active', i === index);
   });
-  document.getElementById('question-panel').innerHTML = steps[index].content;
+
+  const qContent  = document.getElementById('q-content');
+  const qExpected = document.getElementById('q-expected');
+  qContent.innerHTML  = steps[index].content;
+  qExpected.innerHTML = '';
+
+  // Move all exp-box elements to the right panel
+  const boxes = qContent.querySelectorAll('.exp-box');
+  if (boxes.length > 0) {
+    const label = document.createElement('div');
+    label.className = 'q-expected-label';
+    label.textContent = 'Expected Output';
+    qExpected.appendChild(label);
+    boxes.forEach(el => qExpected.appendChild(el));
+  }
+
   document.getElementById('code-editor').value = '';
   document.getElementById('output').textContent = '— run your code to see output —';
   document.getElementById('output').className = '';
