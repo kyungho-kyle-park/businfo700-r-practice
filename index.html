@@ -407,7 +407,7 @@ const LABS = {
     content: `
       <h2><span class="q-num">6</span> Compute New Variables</h2>
       <p>Add three new columns to <code>cafe</code> at once: <code>Weekly_Pay</code>, <code>Annual_Pay</code>, and <code>Pay_Level</code>.</p>
-      <p><code>Pay_Level</code>는 <code>Weekly_Pay >= 600</code>이면 <strong>"High"</strong>, 아니면 <strong>"Low"</strong>로 설정하고 categorical variable로 저장하세요.</p>
+      <p><code>Pay_Level</code> should be <strong>"High"</strong> if <code>Weekly_Pay >= 600</code>, otherwise <strong>"Low"</strong>, stored as a categorical variable.</p>
       <div class="exp-box"><strong>Expected Weekly_Pay values</strong><pre>Tane: 836 | Aroha: 1400 | Mia: 525 | Connor: 1386 | Priya: 660 | Liam: 300</pre></div>`,
     check: `
       ok <- TRUE; msg <- character(0)
