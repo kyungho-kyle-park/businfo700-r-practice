@@ -2,14 +2,19 @@ import { WebR } from 'https://webr.r-wasm.org/latest/webr.mjs';
 
 // ─── State ────────────────────────────────────────────────────
 const state = {
-  webR: null,
-  webrReady: false,
-  questions: [],
-  currentQuestion: null,
-  currentCourse: 'R',
-  editor: null,
-  completedIds:  new Set(JSON.parse(localStorage.getItem('completedIds')  || '[]')),
-  collapsedSets: new Set(JSON.parse(localStorage.getItem('collapsedSets') || '[]')),
+  webR:                null,
+  webrReady:           false,
+  questions:           [],
+  currentQuestion:     null,
+  currentCourse:       'R',
+  editor:              null,
+  // 'done' | 'tried' | 'skipped'  persisted across page loads
+  questionStatus:      new Map(Object.entries(JSON.parse(localStorage.getItem('questionStatus') || '{}'))),
+  collapsedSets:       new Set(JSON.parse(localStorage.getItem('collapsedSets') || '[]')),
+  // in-memory only: { [id]: { code, outputHtml } }
+  questionEditorState: {},
+  // tracks which set envs have been saved to WebR /tmp (in-memory, session only)
+  savedSetEnvs:        new Set(),
 };
 
 const CLIENT_ID = (() => {
@@ -22,8 +27,6 @@ const $ = id => document.getElementById(id);
 
 // ─── Init ─────────────────────────────────────────────────────
 async function init() {
-  applyTheme(localStorage.getItem('theme') || 'dark');
-
   const authed = sessionStorage.getItem('auth') === '1';
   if (authed) {
     showApp();
@@ -33,7 +36,6 @@ async function init() {
   }
 
   $('pwd-form').addEventListener('submit', onPasswordSubmit);
-  $('theme-toggle').addEventListener('click', toggleTheme);
   $('run-btn').addEventListener('click', runCode);
   $('clear-btn').addEventListener('click', () => { state.editor?.setValue(''); state.editor?.focus(); });
   $('clear-console-btn').addEventListener('click', clearConsole);
@@ -46,22 +48,6 @@ async function init() {
   );
 
   await loadQuestions();
-}
-
-// ─── Theme ────────────────────────────────────────────────────
-function applyTheme(theme) {
-  document.documentElement.setAttribute('data-theme', theme);
-  localStorage.setItem('theme', theme);
-  const moon = document.querySelector('.icon-moon');
-  const sun  = document.querySelector('.icon-sun');
-  if (theme === 'dark') { moon?.classList.remove('hidden'); sun?.classList.add('hidden'); }
-  else                  { moon?.classList.add('hidden');    sun?.classList.remove('hidden'); }
-  if (state.editor) state.editor.setOption('theme', theme === 'dark' ? 'dracula' : 'eclipse');
-  document.querySelectorAll('.sol-cm').forEach(cm => cm.CodeMirror?.setOption('theme', theme === 'dark' ? 'dracula' : 'eclipse'));
-}
-
-function toggleTheme() {
-  applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
 }
 
 // ─── Password ─────────────────────────────────────────────────
@@ -103,19 +89,56 @@ async function startWebR() {
   screen.classList.remove('hidden');
   setStatus('loading', 'Loading R...');
 
-  try {
-    state.webR = new WebR();
-    await state.webR.init();
-
-    state.webrReady = true;
-    screen.classList.add('hidden');
-    setStatus('ready', 'R Ready');
-    $('run-btn').disabled = false;
-  } catch (err) {
-    $('load-status').textContent = `Init error: ${err.message}`;
-    setStatus('error', 'R Error');
-    setTimeout(() => screen.classList.add('hidden'), 3000);
+  // Init WebR engine once
+  if (!state.webR) {
+    try {
+      state.webR = new WebR();
+      await state.webR.init();
+    } catch (err) {
+      showRetryButton(`Failed to load R engine: ${err.message}`);
+      return;
+    }
   }
+
+  // Install + load dplyr with up to 3 retries
+  const MAX_TRIES = 3;
+  for (let attempt = 1; attempt <= MAX_TRIES; attempt++) {
+    try {
+      $('load-status').textContent =
+        attempt === 1
+          ? 'Installing dplyr (first load ~30s)…'
+          : `Retrying dplyr install (${attempt}/${MAX_TRIES})…`;
+
+      await state.webR.evalRVoid("webr::install('dplyr')");
+      await state.webR.evalRVoid("library(dplyr)");
+
+      state.webrReady = true;
+      screen.classList.add('hidden');
+      setStatus('ready', 'R Ready');
+      $('run-btn').disabled = false;
+      return;
+    } catch (err) {
+      if (attempt === MAX_TRIES) {
+        showRetryButton(`dplyr install failed after ${MAX_TRIES} attempts. Check your connection.`);
+      }
+    }
+  }
+}
+
+function showRetryButton(message) {
+  $('load-status').textContent = message;
+  setStatus('error', 'R Error');
+
+  const existing = document.getElementById('retry-btn');
+  if (existing) return;
+
+  const btn = document.createElement('button');
+  btn.id = 'retry-btn';
+  btn.textContent = '↺ Retry';
+  btn.className = 'btn-primary';
+  btn.style.cssText = 'margin-top:12px; font-size:0.85rem; padding:8px 20px;';
+  btn.onclick = () => { btn.remove(); startWebR(); };
+  $('load-status').insertAdjacentElement('afterend', btn);
 }
 
 function setStatus(type, text) {
@@ -128,9 +151,8 @@ function setStatus(type, text) {
 // ─── Editor ───────────────────────────────────────────────────
 function initEditor() {
   if (state.editor) return;
-  const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dracula' : 'eclipse';
   state.editor = CodeMirror($('editor-container'), {
-    mode: 'r', theme,
+    mode: 'r', theme: 'eclipse',
     lineNumbers: true,
     indentUnit: 2, tabSize: 2, indentWithTabs: false,
     lineWrapping: true,
@@ -143,7 +165,8 @@ function initEditor() {
       'Ctrl-Shift-M': cm => cm.replaceSelection(' %>% '),
     },
   });
-  state.editor.setSize('100%', 220);
+  state.editor.setSize('100%', 300);
+  setTimeout(() => state.editor.refresh(), 0);
 }
 
 // ─── Questions ────────────────────────────────────────────────
@@ -164,7 +187,7 @@ function renderSidebar() {
 
   el.innerHTML = weeks.map(w => {
     const weekQs   = list.filter(q => q.week === w);
-    const weekDone = weekQs.filter(q => state.completedIds.has(q.id)).length;
+    const weekDone = weekQs.filter(q => state.questionStatus.get(String(q.id)) === 'done').length;
     const sets     = [...new Set(weekQs.map(q => q.set))].sort((a, b) => a - b);
 
     return `
@@ -177,7 +200,7 @@ function renderSidebar() {
         ${sets.map(s => {
           const setQs    = weekQs.filter(q => q.set === s);
           const setTitle = setQs[0]?.set_title || `Set ${s}`;
-          const setDone  = setQs.filter(q => state.completedIds.has(q.id)).length;
+          const setDone  = setQs.filter(q => state.questionStatus.get(String(q.id)) === 'done').length;
           const setKey   = `w${w}s${s}`;
           const collapsed = state.collapsedSets.has(setKey);
 
@@ -190,15 +213,17 @@ function renderSidebar() {
               </div>
               <ul class="q-list ${collapsed ? 'hidden' : ''}">
                 ${setQs.map(q => {
-                  const locked = isLocked(q);
-                  const active = state.currentQuestion?.id === q.id;
-                  const done   = state.completedIds.has(q.id);
-                  const qNum   = q.id > 100 ? `E${q.id - 100}` : String(q.id);
+                  const locked  = isLocked(q);
+                  const active  = state.currentQuestion?.id === q.id;
+                  const status  = state.questionStatus.get(String(q.id));
+                  const qNum    = q.id > 100 ? `E${q.id - 100}` : String(q.id);
                   let statusHtml = '';
-                  if (locked) statusHtml = '<span class="q-status locked">🔒</span>';
-                  else if (done) statusHtml = '<span class="q-status done">✓</span>';
+                  if (locked)                statusHtml = '<span class="q-status locked">🔒</span>';
+                  else if (status === 'done')    statusHtml = '<span class="q-status done">✓</span>';
+                  else if (status === 'tried')   statusHtml = '<span class="q-status tried">△</span>';
+                  else if (status === 'skipped') statusHtml = '<span class="q-status skipped">✕</span>';
                   return `
-                    <li class="q-item ${active ? 'active' : ''} ${locked ? 'locked-item' : ''} ${done && !active ? 'done' : ''}"
+                    <li class="q-item ${active ? 'active' : ''} ${locked ? 'locked-item' : ''} ${status === 'done' && !active ? 'done' : ''}"
                         data-id="${q.id}" tabindex="${locked ? -1 : 0}" role="button">
                       <span class="q-num-badge">${qNum}</span>
                       <span class="q-item-title">${q.title}</span>
@@ -230,13 +255,55 @@ function toggleSet(setKey) {
   renderSidebar();
 }
 
-function selectQuestion(id) {
+async function selectQuestion(id) {
   const q = state.questions.find(x => x.id === id);
   if (!q) return;
+
+  // Save current question's editor + output before switching
+  if (state.currentQuestion) {
+    saveEditorState(state.currentQuestion.id);
+    // Mark as skipped if they never ran code on this question
+    if (!state.questionStatus.has(String(state.currentQuestion.id))) {
+      state.questionStatus.set(String(state.currentQuestion.id), 'skipped');
+      saveQuestionStatus();
+    }
+    // Save/restore WebR environment when moving to a different set
+    const fromSetKey = `w${state.currentQuestion.week}s${state.currentQuestion.set}`;
+    const toSetKey   = `w${q.week}s${q.set}`;
+    if (fromSetKey !== toSetKey && state.webrReady) {
+      await switchSetEnvironment(state.currentQuestion, q);
+    }
+  }
+
   state.currentQuestion = q;
   renderSidebar();
   renderQuestion(q);
   if (window.innerWidth < 768) closeSidebar();
+}
+
+async function switchSetEnvironment(fromQ, toQ) {
+  const fromKey = `w${fromQ.week}s${fromQ.set}`;
+  const toKey   = `w${toQ.week}s${toQ.set}`;
+
+  // Save current set's environment if any variables exist
+  try {
+    await state.webR.evalRVoid(
+      `if (length(ls(envir = globalenv())) > 0) save(list = ls(envir = globalenv()), file = '/tmp/env_${fromKey}.RData', envir = globalenv())`
+    );
+    state.savedSetEnvs.add(fromKey);
+  } catch { /* ignore */ }
+
+  // Clear global environment
+  await state.webR.evalRVoid('rm(list = ls())').catch(() => {});
+
+  // Restore target set's environment if it was previously saved
+  if (state.savedSetEnvs.has(toKey)) {
+    try {
+      await state.webR.evalRVoid(`load('/tmp/env_${toKey}.RData')`);
+    } catch { /* ignore */ }
+  } else {
+    resetEnvironment();
+  }
 }
 
 function renderQuestion(q) {
@@ -251,13 +318,17 @@ function renderQuestion(q) {
   $('q-scenario').innerHTML   = q.scenario || '';
   $('q-task').innerHTML       = q.task;
 
-  state.editor?.setValue(q.starter || '# Write your code here\n');
-  clearConsole();
-  resetEnvironment();
+  // Restore saved editor + output, or initialise fresh for first visit
+  restoreEditorState(q.id, q.starter);
 
-  // Hide Environment panel for non-R questions
+  // Keep WebR environment across questions; just refresh the display
   const envPanel = $('env-panel');
   if (envPanel) envPanel.style.display = q.type === 'R' ? '' : 'none';
+  if (q.type === 'R' && state.webrReady) {
+    inspectEnvironment();
+  } else if (q.type !== 'R') {
+    resetEnvironment();
+  }
 
   const expectedPanel = $('expected-panel');
   const expectedEl    = $('q-expected');
@@ -283,13 +354,31 @@ function renderQuestion(q) {
     $('solution-btn-text').textContent = 'Show Solution';
   }
 
-  // Show/hide and enable/disable run button based on course and WebR state
   const runBtn = $('run-btn');
   runBtn.style.display = q.type === 'R' ? '' : 'none';
   runBtn.disabled = !state.webrReady;
   runBtn.title = state.webrReady ? '' : 'Waiting for R engine to load…';
 
   state.editor?.focus();
+}
+
+// ─── Editor State (per-question, in-memory) ───────────────────
+function saveEditorState(id) {
+  state.questionEditorState[id] = {
+    code:       state.editor?.getValue() || '',
+    outputHtml: $('console-output').innerHTML,
+  };
+}
+
+function restoreEditorState(id, starter) {
+  const saved = state.questionEditorState[id];
+  if (saved) {
+    state.editor?.setValue(saved.code);
+    $('console-output').innerHTML = saved.outputHtml;
+  } else {
+    state.editor?.setValue(starter || '# Write your code here\n');
+    clearConsole();
+  }
 }
 
 // ─── Run Code ─────────────────────────────────────────────────
@@ -312,21 +401,24 @@ async function runCode() {
   const shelter = await new state.webR.Shelter();
   try {
     const result = await shelter.captureR(code, { withAutoprint: true });
-    const hasStdout = result.output.some(l => l.type === 'stdout');
+    const stdoutLines = result.output.filter(l => l.type === 'stdout');
+    const hasStdout   = stdoutLines.length > 0;
+
     if (!result.output.length) {
       appendConsole('(no output)', 'muted');
     } else {
       result.output.forEach(line => {
-        if (line.type === 'stdout')  appendConsole(line.data, 'stdout');
-        else                         appendConsole(line.data, 'stderr');
+        if (line.type === 'stdout') appendConsole(line.data, 'stdout');
+        else                        appendConsole(line.data, 'stderr');
       });
     }
-    // Mark question as completed on first successful output
+
     if (hasStdout && state.currentQuestion) {
-      state.completedIds.add(state.currentQuestion.id);
-      localStorage.setItem('completedIds', JSON.stringify([...state.completedIds]));
+      state.questionStatus.set(String(state.currentQuestion.id), 'done');
+      saveQuestionStatus();
       renderSidebar();
     }
+
     await inspectEnvironment();
   } catch (err) {
     appendConsole(`Error: ${err.message}`, 'error');
@@ -337,15 +429,17 @@ async function runCode() {
   }
 }
 
+function saveQuestionStatus() {
+  localStorage.setItem('questionStatus', JSON.stringify(Object.fromEntries(state.questionStatus)));
+}
+
 // ─── Console ──────────────────────────────────────────────────
 function clearConsole() {
-  const el = $('console-output');
-  el.innerHTML = '';
+  $('console-output').innerHTML = '';
 }
 
 function appendConsole(text, type = 'stdout') {
   const el = $('console-output');
-  // Remove placeholder
   el.querySelector('.console-placeholder')?.remove();
   const line = document.createElement('div');
   line.className = `console-line console-${type}`;
@@ -375,14 +469,12 @@ function toggleSolution() {
     const container = $('solution-code');
     container.innerHTML = '';
 
-    // Show panel first so CodeMirror can measure dimensions
     panel.classList.remove('hidden');
     $('solution-btn-text').textContent = 'Hide Solution';
 
-    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dracula' : 'eclipse';
     const cm = CodeMirror(container, {
       mode: q.type === 'R' ? 'r' : 'javascript',
-      theme, lineNumbers: true, readOnly: true, value: solution,
+      theme: 'eclipse', lineNumbers: true, readOnly: true, value: solution,
     });
     cm.setSize('100%', 'auto');
     container.classList.add('sol-cm');
@@ -411,8 +503,9 @@ function copySolution() {
 
 // ─── Course Switch ────────────────────────────────────────────
 function switchCourse(course) {
-  state.currentCourse    = course;
-  state.currentQuestion  = null;
+  if (state.currentQuestion) saveEditorState(state.currentQuestion.id);
+  state.currentCourse   = course;
+  state.currentQuestion = null;
   document.querySelectorAll('.course-tab').forEach(t =>
     t.classList.toggle('active', t.dataset.course === course)
   );
@@ -504,7 +597,8 @@ function esc(s) {
 
 // ─── GA4 ──────────────────────────────────────────────────────
 function fireGA4(name, params = {}) {
-  if (typeof gtag === 'function') gtag('event', name, params);
+  window.dataLayer = window.dataLayer || [];
+  dataLayer.push({ event: name, ...params });
 }
 
 // ─── Global key intercept (override Chrome shortcuts) ─────────
@@ -515,7 +609,7 @@ window.addEventListener('keydown', e => {
     e.stopImmediatePropagation();
     state.editor.replaceSelection(' %>% ');
   }
-}, true); // capture phase — fires before Chrome's browser shortcuts
+}, true);
 
 // ─── Boot ─────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', init);
