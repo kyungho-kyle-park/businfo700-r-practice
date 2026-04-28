@@ -105,6 +105,9 @@ body {
 #pwd-input:focus { border-color: var(--violet); box-shadow: 0 0 0 3px rgba(12,12,72,0.12); }
 #pwd-input::placeholder { letter-spacing: normal; color: var(--text-3); }
 .error-msg { color: var(--fail-text); font-size: 0.8rem; min-height: 20px; margin-top: 4px; }
+.modal-notice { margin-top: 24px; font-size: 0.72rem; color: var(--text-3); line-height: 1.6; }
+.modal-notice a { color: var(--violet); text-decoration: none; }
+.modal-notice a:hover { text-decoration: underline; }
 
 /* ── Loading Screen ──────────────────────────────────────────── */
 .loading-overlay {
