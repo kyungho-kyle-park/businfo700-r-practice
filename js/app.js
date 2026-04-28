@@ -392,7 +392,7 @@ async function runCode() {
   const code = state.editor?.getValue()?.trim();
   if (!code) return;
 
-  fireGA4('run_code', { question_id: state.currentQuestion?.id ?? 0, client_id: CLIENT_ID });
+  fireGA4('run_code', { question_id: state.currentQuestion?.id ?? 0, week: state.currentQuestion?.week ?? 0, set: state.currentQuestion?.set ?? 0, client_id: CLIENT_ID });
 
   const btn = $('run-btn');
   btn.disabled = true;
@@ -424,7 +424,7 @@ async function runCode() {
     await inspectEnvironment();
   } catch (err) {
     appendConsole(`Error: ${err.message}`, 'error');
-    fireGA4('run_error', { question_id: state.currentQuestion?.id ?? 0, error_message: err.message, client_id: CLIENT_ID });
+    fireGA4('run_error', { question_id: state.currentQuestion?.id ?? 0, week: state.currentQuestion?.week ?? 0, set: state.currentQuestion?.set ?? 0, error_message: err.message, client_id: CLIENT_ID });
   } finally {
     await shelter.purge();
     btn.disabled = false;
@@ -484,7 +484,7 @@ function toggleSolution() {
 
     panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
-    fireGA4('view_solution', { question_id: q.id, client_id: CLIENT_ID });
+    fireGA4('view_solution', { question_id: q.id, week: q.week, set: q.set, client_id: CLIENT_ID });
   } else {
     panel.classList.add('hidden');
     $('solution-btn-text').textContent = 'Show Solution';
