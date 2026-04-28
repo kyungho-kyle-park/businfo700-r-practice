@@ -205,6 +205,19 @@ body {
 .icon-btn:hover { color: var(--violet); background: #f0f1f5; }
 .icon-btn svg  { width: 18px; height: 18px; }
 
+/* ── Notice Bar ──────────────────────────────────────────────── */
+.notice-bar {
+  background: var(--violet);
+  border-bottom: 1px solid var(--violet);
+  padding: 7px 20px;
+  font-size: 0.76rem;
+  color: rgba(255,255,255,0.8);
+  text-align: center;
+  flex-shrink: 0;
+}
+.notice-bar a { color: #ffffff; text-decoration: underline; opacity: 0.9; }
+.notice-bar a:hover { opacity: 1; }
+
 /* ── App Body ────────────────────────────────────────────────── */
 .app-body { flex: 1; display: flex; overflow: hidden; position: relative; }
 
@@ -623,6 +636,20 @@ body {
   box-shadow: var(--shadow-sm);
 }
 .solution-panel.hidden { display: none; }
+
+/* ── Excel Solution ──────────────────────────────────────────── */
+.excel-solution-text {
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
+  line-height: 1.75;
+  color: var(--text-1);
+  background: #f7f8fb;
+  border-radius: var(--radius-sm);
+  padding: 16px 18px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+}
 
 /* ── Buttons ─────────────────────────────────────────────────── */
 .btn-primary {

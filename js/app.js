@@ -356,12 +356,16 @@ function renderQuestion(q) {
     $('solution-btn-text').textContent = 'Show Solution';
   }
 
+  // Show/hide code area
+  const codeArea = document.querySelector('.code-area');
+  if (codeArea) codeArea.style.display = q.type === 'R' ? '' : 'none';
+
   const runBtn = $('run-btn');
   runBtn.style.display = q.type === 'R' ? '' : 'none';
   runBtn.disabled = !state.webrReady;
   runBtn.title = state.webrReady ? '' : 'Waiting for R engine to load…';
 
-  state.editor?.focus();
+  if (q.type === 'R') state.editor?.focus();
 }
 
 // ─── Editor State (per-question, in-memory) ───────────────────
@@ -475,12 +479,18 @@ function toggleSolution() {
     panel.classList.remove('hidden');
     $('solution-btn-text').textContent = 'Hide Solution';
 
-    const cm = CodeMirror(container, {
-      mode: q.type === 'R' ? 'r' : 'javascript',
-      theme: 'eclipse', lineNumbers: true, readOnly: true, value: solution,
-    });
-    cm.setSize('100%', 'auto');
-    container.classList.add('sol-cm');
+    if (q.type === 'R') {
+      const cm = CodeMirror(container, {
+        mode: 'r', theme: 'eclipse', lineNumbers: true, readOnly: true, value: solution,
+      });
+      cm.setSize('100%', 'auto');
+      container.classList.add('sol-cm');
+    } else {
+      const pre = document.createElement('pre');
+      pre.className = 'excel-solution-text';
+      pre.textContent = solution;
+      container.appendChild(pre);
+    }
 
     panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
