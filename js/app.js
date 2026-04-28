@@ -279,6 +279,8 @@ async function selectQuestion(id) {
   renderSidebar();
   renderQuestion(q);
   if (window.innerWidth < 768) closeSidebar();
+
+  fireGA4('question_select', { question_id: q.id, week: q.week, set: q.set, client_id: CLIENT_ID });
 }
 
 async function switchSetEnvironment(fromQ, toQ) {
@@ -422,6 +424,7 @@ async function runCode() {
     await inspectEnvironment();
   } catch (err) {
     appendConsole(`Error: ${err.message}`, 'error');
+    fireGA4('run_error', { question_id: state.currentQuestion?.id ?? 0, error_message: err.message, client_id: CLIENT_ID });
   } finally {
     await shelter.purge();
     btn.disabled = false;
