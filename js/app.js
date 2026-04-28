@@ -43,9 +43,6 @@ async function init() {
   $('copy-solution-btn').addEventListener('click', copySolution);
   $('hamburger').addEventListener('click', toggleSidebar);
   $('sidebar-overlay').addEventListener('click', closeSidebar);
-  document.querySelectorAll('.course-tab').forEach(t =>
-    t.addEventListener('click', () => switchCourse(t.dataset.course))
-  );
 
   await loadQuestions();
 }
@@ -182,7 +179,7 @@ async function loadQuestions() {
 
 function renderSidebar() {
   const el   = $('sidebar-content');
-  const list = state.questions.filter(q => q.type === state.currentCourse);
+  const list = state.questions;
   const weeks = [...new Set(list.map(q => q.week))].sort((a, b) => a - b);
 
   el.innerHTML = weeks.map(w => {
@@ -314,23 +311,17 @@ function renderQuestion(q) {
 
   $('q-badge').textContent    = `W${q.week} · Q${q.id}`;
   const typeBadge = $('q-type');
-  typeBadge.textContent       = q.type;
-  typeBadge.className         = `q-type-badge ${q.type === 'R' ? 'r-type' : 'excel-type'}`;
-  $('q-title').textContent    = q.title;
-  $('q-scenario').innerHTML   = q.scenario || '';
-  $('q-task').innerHTML       = q.task;
+  typeBadge.textContent = 'R';
+  typeBadge.className   = 'q-type-badge r-type';
+  $('q-title').textContent  = q.title;
+  $('q-scenario').innerHTML = q.scenario || '';
+  $('q-task').innerHTML     = q.task;
 
   // Restore saved editor + output, or initialise fresh for first visit
   restoreEditorState(q.id, q.starter);
 
-  // Keep WebR environment across questions; just refresh the display
-  const envPanel = $('env-panel');
-  if (envPanel) envPanel.style.display = q.type === 'R' ? '' : 'none';
-  if (q.type === 'R' && state.webrReady) {
-    inspectEnvironment();
-  } else if (q.type !== 'R') {
-    resetEnvironment();
-  }
+  // Refresh environment display
+  if (state.webrReady) inspectEnvironment();
 
   const expectedPanel = $('expected-panel');
   const expectedEl    = $('q-expected');
@@ -356,16 +347,11 @@ function renderQuestion(q) {
     $('solution-btn-text').textContent = 'Show Solution';
   }
 
-  // Show/hide code area
-  const codeArea = document.querySelector('.code-area');
-  if (codeArea) codeArea.style.display = q.type === 'R' ? '' : 'none';
-
   const runBtn = $('run-btn');
-  runBtn.style.display = q.type === 'R' ? '' : 'none';
   runBtn.disabled = !state.webrReady;
   runBtn.title = state.webrReady ? '' : 'Waiting for R engine to load…';
 
-  if (q.type === 'R') state.editor?.focus();
+  state.editor?.focus();
 }
 
 // ─── Editor State (per-question, in-memory) ───────────────────
@@ -471,7 +457,7 @@ function toggleSolution() {
 
   if (isHidden) {
     let solution;
-    try { solution = atob(q.solution); } catch { solution = q.solution; }
+    try { solution = b64Decode(q.solution); } catch { solution = q.solution; }
 
     const container = $('solution-code');
     container.innerHTML = '';
@@ -479,18 +465,11 @@ function toggleSolution() {
     panel.classList.remove('hidden');
     $('solution-btn-text').textContent = 'Hide Solution';
 
-    if (q.type === 'R') {
-      const cm = CodeMirror(container, {
-        mode: 'r', theme: 'eclipse', lineNumbers: true, readOnly: true, value: solution,
-      });
-      cm.setSize('100%', 'auto');
-      container.classList.add('sol-cm');
-    } else {
-      const pre = document.createElement('pre');
-      pre.className = 'excel-solution-text';
-      pre.textContent = solution;
-      container.appendChild(pre);
-    }
+    const cm = CodeMirror(container, {
+      mode: 'r', theme: 'eclipse', lineNumbers: true, readOnly: true, value: solution,
+    });
+    cm.setSize('100%', 'auto');
+    container.classList.add('sol-cm');
 
     panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
@@ -505,7 +484,7 @@ function copySolution() {
   const q = state.currentQuestion;
   if (!q) return;
   try {
-    const text = atob(q.solution);
+    const text = b64Decode(q.solution);
     navigator.clipboard.writeText(text).then(() => {
       const btn = $('copy-solution-btn');
       btn.textContent = 'Copied!';
@@ -515,18 +494,6 @@ function copySolution() {
 }
 
 // ─── Course Switch ────────────────────────────────────────────
-function switchCourse(course) {
-  if (state.currentQuestion) saveEditorState(state.currentQuestion.id);
-  state.currentCourse   = course;
-  state.currentQuestion = null;
-  document.querySelectorAll('.course-tab').forEach(t =>
-    t.classList.toggle('active', t.dataset.course === course)
-  );
-  $('welcome-state').classList.remove('hidden');
-  $('question-view').classList.add('hidden');
-  renderSidebar();
-}
-
 // ─── Sidebar ──────────────────────────────────────────────────
 function toggleSidebar() { $('sidebar').classList.contains('open') ? closeSidebar() : openSidebar(); }
 function openSidebar()  { $('sidebar').classList.add('open');    $('sidebar-overlay').classList.add('visible'); }
@@ -602,6 +569,14 @@ function renderEnvironment(raw) {
         </tr>`).join('')}
       </tbody>
     </table>`;
+}
+
+function b64Decode(str) {
+  try {
+    return decodeURIComponent(
+      atob(str).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')
+    );
+  } catch { return atob(str); }
 }
 
 function esc(s) {
