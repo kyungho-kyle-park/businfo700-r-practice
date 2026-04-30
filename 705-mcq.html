@@ -514,7 +514,7 @@ function startQuiz(mode) {
   document.getElementById('scoreNum').textContent = '0';
 
   if (mode === 'mock') {
-    timeLeft = 30 * 60;
+    timeLeft = 20 * 60;
     document.getElementById('timerDisplay').style.display = 'block';
     updateTimer();
     timerInterval = setInterval(() => {
