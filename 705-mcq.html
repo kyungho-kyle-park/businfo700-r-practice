@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MCQ Practice · BUSINFO 705</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f2f4f7;
+    --bg2: #f0f1f4;
+    --panel: #ffffff;
+    --panel2: #f7f8fa;
+    --accent: #FD4C44;
+    --accent2: #e03030;
+    --text: #0c0c48;
+    --text2: #888899;
+    --text3: #3a3a6a;
+    --border: #dde0e8;
+    --border-soft: #ebedf2;
+    --violet: #0c0c48;
+    --correct: #16a34a;
+    --correct-bg: #f0fdf4;
+    --correct-border: #bbf7d0;
+    --wrong: #dc2626;
+    --wrong-bg: #fef2f2;
+    --wrong-border: #fecaca;
+    --warn: #d97706;
+    --easy: #16a34a;
+    --moderate: #d97706;
+    --hard: #dc2626;
+    --shadow-sm: 0 1px 4px rgba(12,12,72,0.07);
+    --shadow-md: 0 4px 16px rgba(12,12,72,0.10);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* HEADER — matches main site */
+  .header {
+    height: 54px;
+    background: #ffffff;
+    border-bottom: 2px solid #0c0c48;
+    padding: 0 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 1px 4px rgba(12,12,72,0.07);
+    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  }
+  .header-left { display: flex; align-items: center; gap: 10px; }
+  .logo { font-size: 0.96rem; font-weight: 800; color: #0c0c48; letter-spacing: 0.01em; }
+  .subtitle { font-size: 0.7rem; color: #888899; display: block; }
+  .back-btn {
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 6px;
+    background: rgba(253,76,68,0.12);
+    color: #FD4C44;
+    border: 1px solid rgba(253,76,68,0.3);
+    text-decoration: none;
+    transition: all 0.2s;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .back-btn:hover { background: rgba(253,76,68,0.22); border-color: #FD4C44; }
+
+  /* LANDING */
+  .landing {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 52px 24px;
+    text-align: center;
+  }
+  .landing h1 { font-size: 28px; font-weight: 800; color: var(--violet); margin-bottom: 8px; }
+  .landing h1 span { color: var(--accent); }
+  .landing p { color: var(--text2); font-size: 14px; margin-bottom: 40px; line-height: 1.6; }
+  .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px; }
+  .mode-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px 22px;
+    cursor: pointer;
+    transition: all 0.18s;
+    text-align: left;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+  }
+  .mode-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--violet);
+    transition: background 0.18s;
+  }
+  .mode-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); border-color: var(--violet); }
+  .mode-card:hover::before { background: var(--accent); }
+  .mode-icon { font-size: 32px; margin-bottom: 14px; }
+  .mode-title { font-size: 16px; font-weight: 800; color: var(--violet); margin-bottom: 8px; }
+  .mode-desc { font-size: 13px; color: var(--text2); line-height: 1.55; }
+  .mode-meta { margin-top: 16px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .tag {
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: var(--bg);
+    color: var(--text3);
+    border: 1px solid var(--border);
+    font-weight: 500;
+  }
+  .topics-info {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px;
+    text-align: left;
+    box-shadow: var(--shadow-sm);
+  }
+  .topics-info h3 { font-size: 11px; color: var(--text2); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+  .topic-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .topic-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text); }
+  .diff-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .diff-dot.easy { background: var(--easy); }
+  .diff-dot.moderate { background: var(--moderate); }
+  .diff-dot.hard { background: var(--hard); }
+
+  /* QUIZ SCREEN */
+  .quiz-screen { display: none; max-width: 780px; margin: 0 auto; padding: 24px; }
+  .quiz-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+  .quiz-progress { flex: 1; }
+  .progress-bar-wrap { height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; margin-top: 6px; }
+  .progress-bar { height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.3s; }
+  .progress-text { font-size: 13px; color: var(--text2); }
+  .score-display { text-align: right; }
+  .score-num { font-size: 22px; font-weight: 800; color: var(--accent); }
+  .score-label { font-size: 11px; color: var(--text2); }
+  .timer-display {
+    text-align: center;
+    padding: 8px 16px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin: 0 20px;
+    box-shadow: var(--shadow-sm);
+  }
+  .timer-num { font-size: 20px; font-weight: 700; font-family: 'Fira Code', monospace; color: var(--violet); }
+  .timer-num.warn { color: var(--warn); }
+  .timer-num.danger { color: var(--wrong); animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+  .question-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 30px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow-sm);
+  }
+  .q-meta { display: flex; gap: 8px; margin-bottom: 16px; align-items: center; flex-wrap: wrap; }
+  .q-badge {
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .q-badge.easy { background: #f0fdf4; color: var(--easy); border: 1px solid #bbf7d0; }
+  .q-badge.moderate { background: #fffbeb; color: var(--moderate); border: 1px solid #fde68a; }
+  .q-badge.hard { background: #fef2f2; color: var(--hard); border: 1px solid #fecaca; }
+  .q-badge.week { background: rgba(253,76,68,0.08); color: var(--accent); border: 1px solid rgba(253,76,68,0.2); }
+  .q-topic { font-size: 12px; color: var(--text2); margin-left: auto; }
+  .q-text {
+    font-size: 16px;
+    line-height: 1.65;
+    font-weight: 600;
+    color: var(--violet);
+    margin-bottom: 24px;
+  }
+  .options-list { display: flex; flex-direction: column; gap: 9px; }
+  .option-btn {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 13px 16px;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: left;
+    color: var(--text);
+    font-size: 14.5px;
+    line-height: 1.5;
+    transition: all 0.15s;
+    width: 100%;
+    font-family: inherit;
+  }
+  .option-btn:hover:not(:disabled) { border-color: var(--violet); background: var(--panel); box-shadow: var(--shadow-sm); }
+  .option-btn:disabled { cursor: default; }
+  .option-btn.selected-correct { border-color: var(--correct); background: var(--correct-bg); }
+  .option-btn.selected-wrong { border-color: var(--wrong); background: var(--wrong-bg); }
+  .option-btn.show-correct { border-color: var(--correct); background: var(--correct-bg); }
+  .option-letter {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--border);
+    color: var(--text3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 12px;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+  .selected-correct .option-letter { background: var(--correct); color: #fff; }
+  .selected-wrong .option-letter { background: var(--wrong); color: #fff; }
+  .show-correct .option-letter { background: var(--correct); color: #fff; }
+
+  .feedback-panel {
+    margin-top: 16px;
+    padding: 18px 22px;
+    border-radius: 10px;
+    display: none;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text3);
+  }
+  .feedback-panel.correct { background: var(--correct-bg); border: 1px solid var(--correct-border); }
+  .feedback-panel.wrong { background: var(--wrong-bg); border: 1px solid var(--wrong-border); }
+  .feedback-header { font-weight: 700; margin-bottom: 6px; font-size: 14px; }
+  .feedback-header.correct { color: var(--correct); }
+  .feedback-header.wrong { color: var(--wrong); }
+
+  .quiz-actions { display: flex; justify-content: flex-end; margin-top: 16px; gap: 10px; }
+  .btn {
+    padding: 10px 24px;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.18s;
+    font-family: inherit;
+  }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: var(--accent2); transform: translateY(-1px); }
+  .btn-secondary { background: var(--panel); color: var(--text2); border: 1px solid var(--border); }
+  .btn-secondary:hover { color: var(--text); border-color: var(--violet); }
+
+  /* RESULTS SCREEN */
+  .results-screen { display: none; max-width: 780px; margin: 0 auto; padding: 24px; }
+  .results-hero {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px;
+    text-align: center;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-sm);
+  }
+  .results-score {
+    font-size: 68px;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .results-score.s-excellent { color: var(--correct); }
+  .results-score.s-good { color: var(--warn); }
+  .results-score.s-poor { color: var(--wrong); }
+  .results-label { font-size: 16px; color: var(--text2); margin-bottom: 28px; }
+  .results-stats { display: flex; gap: 32px; justify-content: center; flex-wrap: wrap; }
+  .stat-item { text-align: center; }
+  .stat-num { font-size: 24px; font-weight: 800; }
+  .stat-lbl { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+  .topic-breakdown {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-sm);
+  }
+  .topic-breakdown h3 { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; font-weight: 700; }
+  .topic-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; font-size: 13.5px; color: var(--text); }
+  .topic-row-name { width: 220px; flex-shrink: 0; }
+  .topic-bar-wrap { flex: 1; height: 7px; background: var(--bg2); border-radius: 4px; overflow: hidden; }
+  .topic-bar { height: 100%; border-radius: 4px; transition: width 0.5s; }
+  .topic-bar.all-correct { background: var(--correct); }
+  .topic-bar.partial { background: var(--warn); }
+  .topic-bar.none { background: var(--wrong); }
+  .topic-fraction { font-size: 12px; color: var(--text2); width: 36px; text-align: right; font-weight: 600; }
+
+  .review-section { margin-bottom: 24px; }
+  .review-section h3 { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; font-weight: 700; }
+  .review-item {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 10px;
+    border-left: 4px solid transparent;
+    box-shadow: var(--shadow-sm);
+  }
+  .review-item.review-correct { border-left-color: var(--correct); }
+  .review-item.review-wrong { border-left-color: var(--wrong); }
+  .review-q { font-size: 13.5px; margin-bottom: 10px; line-height: 1.5; color: var(--violet); font-weight: 600; }
+  .review-answers { font-size: 13px; color: var(--text2); line-height: 1.8; }
+  .review-your { color: var(--wrong); font-weight: 600; }
+  .review-right { color: var(--correct); font-weight: 600; }
+  .review-explain { font-size: 13px; color: var(--text3); margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border-soft); line-height: 1.65; }
+
+  .results-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    .mode-grid { grid-template-columns: 1fr; }
+    .topic-list { grid-template-columns: 1fr; }
+    .topic-row-name { width: 140px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div>
+      <span class="logo">Analytics Practice</span>
+      <span class="subtitle">BUSINFO 705 · Decision Analytics MCQ</span>
+    </div>
+  </div>
+  <a href="index.html" class="back-btn">← Home</a>
+</div>
+
+<!-- LANDING -->
+<div class="landing" id="landingScreen">
+  <h1>MCQ Quiz <span>Practice</span></h1>
+  <p>Conceptual multiple-choice questions covering Weeks 1-3.<br>Choose a mode to start practising.</p>
+
+  <div class="mode-grid">
+    <div class="mode-card" onclick="startQuiz('practice')">
+      <div class="mode-icon">📚</div>
+      <div class="mode-title">Practice Mode</div>
+      <div class="mode-desc">Work through all 40 questions in a randomised order. Instant feedback and explanations after each answer. No time pressure.</div>
+      <div class="mode-meta">
+        <span class="tag">40 questions</span>
+        <span class="tag">Random order</span>
+        <span class="tag">No timer</span>
+        <span class="tag">Full explanations</span>
+      </div>
+    </div>
+    <div class="mode-card" onclick="startQuiz('mock')">
+      <div class="mode-icon">⏱</div>
+      <div class="mode-title">Mock Exam Mode</div>
+      <div class="mode-desc">Simulate the real Quiz 1 — 1 question per topic, 10 questions total, 30-minute countdown timer. Results shown at the end.</div>
+      <div class="mode-meta">
+        <span class="tag">10 questions</span>
+        <span class="tag">1 per topic</span>
+        <span class="tag">30-min timer</span>
+        <span class="tag">Exam conditions</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="topics-info">
+    <h3>Quiz 1 Topics Covered</h3>
+    <div class="topic-list" id="topicListLanding"></div>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div class="quiz-screen" id="quizScreen">
+  <div class="quiz-header">
+    <div class="quiz-progress">
+      <div class="progress-text" id="progressText">Question 1 of 10</div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar" id="progressBar" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="timer-display" id="timerDisplay" style="display:none">
+      <div style="font-size:10px;color:var(--text2);margin-bottom:2px">TIME LEFT</div>
+      <div class="timer-num" id="timerNum">30:00</div>
+    </div>
+    <div class="score-display">
+      <div class="score-num" id="scoreNum">0</div>
+      <div class="score-label">correct</div>
+    </div>
+  </div>
+
+  <div class="question-card" id="questionCard">
+    <div class="q-meta">
+      <span class="q-badge" id="qDiffBadge">Easy</span>
+      <span class="q-badge week" id="qWeekBadge">Week 1</span>
+      <span class="q-topic" id="qTopicName"></span>
+    </div>
+    <div class="q-text" id="qText"></div>
+    <div class="options-list" id="optionsList"></div>
+    <div class="feedback-panel" id="feedbackPanel">
+      <div class="feedback-header" id="feedbackHeader"></div>
+      <div id="feedbackText"></div>
+    </div>
+  </div>
+
+  <div class="quiz-actions">
+    <button class="btn btn-secondary" id="skipBtn" onclick="nextQuestion()">Skip</button>
+    <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none">Next Question</button>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div class="results-screen" id="resultsScreen">
+  <div class="results-hero">
+    <div class="results-score" id="resultsScore"></div>
+    <div class="results-label" id="resultsLabel"></div>
+    <div class="results-stats">
+      <div class="stat-item">
+        <div class="stat-num" id="statCorrect" style="color:var(--correct)">-</div>
+        <div class="stat-lbl">Correct</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num" id="statWrong" style="color:var(--wrong)">-</div>
+        <div class="stat-lbl">Wrong</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num" id="statSkipped" style="color:var(--text2)">-</div>
+        <div class="stat-lbl">Skipped</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic-breakdown">
+    <h3>Performance by Topic</h3>
+    <div id="topicBreakdown"></div>
+  </div>
+
+  <div class="review-section" id="reviewSection">
+    <h3>Review Answers</h3>
+    <div id="reviewList"></div>
+  </div>
+
+  <div class="results-actions">
+    <button class="btn btn-secondary" onclick="goHome()">Back to Home</button>
+    <button class="btn btn-primary" onclick="startQuiz(currentMode)">Try Again</button>
+  </div>
+</div>
+
+<script>
+let quizData = null;
+let currentMode = 'practice';
+let questions = [];
+let currentIndex = 0;
+let score = 0;
+let answers = []; // {questionId, selected, correct}
+let timerInterval = null;
+let timeLeft = 0;
+let answered = false;
+
+// Auth guard — redirect to home if not authenticated
+if (sessionStorage.getItem('auth') !== '1') {
+  window.location.replace('index.html');
+}
+
+async function loadData() {
+  const res = await fetch('data/quiz705.json');
+  quizData = await res.json();
+  renderTopicList();
+}
+
+function renderTopicList() {
+  const el = document.getElementById('topicListLanding');
+  el.innerHTML = quizData.topics.map(t => `
+    <div class="topic-item">
+      <div class="diff-dot ${t.difficulty.toLowerCase()}"></div>
+      <span>${t.name}</span>
+    </div>
+  `).join('');
+}
+
+function startQuiz(mode) {
+  currentMode = mode;
+  score = 0;
+  answers = [];
+  currentIndex = 0;
+
+  if (mode === 'practice') {
+    questions = shuffle([...quizData.questions]);
+  } else {
+    // mock: 1 question per topic
+    questions = quizData.topics.map(topic => {
+      const pool = quizData.questions.filter(q => q.topicId === topic.id);
+      return pool[Math.floor(Math.random() * pool.length)];
+    });
+    questions = shuffle(questions);
+  }
+
+  document.getElementById('landingScreen').style.display = 'none';
+  document.getElementById('resultsScreen').style.display = 'none';
+  document.getElementById('quizScreen').style.display = 'block';
+  document.getElementById('scoreNum').textContent = '0';
+
+  if (mode === 'mock') {
+    timeLeft = 30 * 60;
+    document.getElementById('timerDisplay').style.display = 'block';
+    updateTimer();
+    timerInterval = setInterval(() => {
+      timeLeft--;
+      updateTimer();
+      if (timeLeft <= 0) {
+        clearInterval(timerInterval);
+        showResults();
+      }
+    }, 1000);
+  } else {
+    document.getElementById('timerDisplay').style.display = 'none';
+    clearInterval(timerInterval);
+  }
+
+  renderQuestion();
+}
+
+function renderQuestion() {
+  if (currentIndex >= questions.length) {
+    showResults();
+    return;
+  }
+
+  answered = false;
+  const q = questions[currentIndex];
+  const topic = quizData.topics.find(t => t.id === q.topicId);
+  const total = questions.length;
+
+  document.getElementById('progressText').textContent = `Question ${currentIndex + 1} of ${total}`;
+  document.getElementById('progressBar').style.width = `${(currentIndex / total) * 100}%`;
+
+  const diffBadge = document.getElementById('qDiffBadge');
+  diffBadge.textContent = q.difficulty;
+  diffBadge.className = `q-badge ${q.difficulty.toLowerCase()}`;
+
+  document.getElementById('qWeekBadge').textContent = `Week ${q.week}`;
+  document.getElementById('qTopicName').textContent = topic ? topic.name : '';
+  document.getElementById('qText').textContent = q.question;
+
+  const letters = ['A', 'B', 'C', 'D'];
+  const list = document.getElementById('optionsList');
+  list.innerHTML = q.options.map((opt, i) => `
+    <button class="option-btn" onclick="selectOption(${i})" id="opt${i}">
+      <span class="option-letter">${letters[i]}</span>
+      <span>${opt}</span>
+    </button>
+  `).join('');
+
+  const fp = document.getElementById('feedbackPanel');
+  fp.style.display = 'none';
+  fp.className = 'feedback-panel';
+
+  document.getElementById('skipBtn').style.display = 'inline-block';
+  document.getElementById('nextBtn').style.display = 'none';
+}
+
+function selectOption(selectedIdx) {
+  if (answered) return;
+  answered = true;
+
+  const q = questions[currentIndex];
+  const isCorrect = selectedIdx === q.correct;
+
+  if (isCorrect) score++;
+  document.getElementById('scoreNum').textContent = score;
+
+  answers.push({ questionId: q.id, selected: selectedIdx, correct: isCorrect });
+
+  // Style buttons
+  for (let i = 0; i < q.options.length; i++) {
+    const btn = document.getElementById(`opt${i}`);
+    btn.disabled = true;
+    if (i === q.correct) btn.classList.add('show-correct');
+    if (i === selectedIdx && !isCorrect) btn.classList.add('selected-wrong');
+    if (i === selectedIdx && isCorrect) {
+      btn.classList.remove('show-correct');
+      btn.classList.add('selected-correct');
+    }
+  }
+
+  // Feedback
+  const fp = document.getElementById('feedbackPanel');
+  const fh = document.getElementById('feedbackHeader');
+  const ft = document.getElementById('feedbackText');
+  fp.style.display = 'block';
+
+  if (isCorrect) {
+    fp.classList.add('correct');
+    fh.textContent = 'Correct!';
+    fh.className = 'feedback-header correct';
+  } else {
+    fp.classList.add('wrong');
+    fh.textContent = `Incorrect. The correct answer is ${['A','B','C','D'][q.correct]}.`;
+    fh.className = 'feedback-header wrong';
+  }
+  ft.textContent = q.explanation;
+
+  document.getElementById('skipBtn').style.display = 'none';
+  document.getElementById('nextBtn').style.display = 'inline-block';
+}
+
+function nextQuestion() {
+  if (!answered) {
+    // skipped
+    const q = questions[currentIndex];
+    answers.push({ questionId: q.id, selected: -1, correct: false });
+  }
+  currentIndex++;
+  renderQuestion();
+}
+
+function updateTimer() {
+  const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+  const s = (timeLeft % 60).toString().padStart(2, '0');
+  const el = document.getElementById('timerNum');
+  el.textContent = `${m}:${s}`;
+  el.className = 'timer-num';
+  if (timeLeft <= 300) el.classList.add('warn');
+  if (timeLeft <= 60) { el.classList.remove('warn'); el.classList.add('danger'); }
+}
+
+function showResults() {
+  clearInterval(timerInterval);
+  document.getElementById('quizScreen').style.display = 'none';
+  document.getElementById('resultsScreen').style.display = 'block';
+
+  const total = questions.length;
+  const correct = answers.filter(a => a.correct).length;
+  const skipped = answers.filter(a => a.selected === -1).length;
+  const wrong = total - correct - skipped;
+  const pct = Math.round((correct / total) * 100);
+
+  const scoreEl = document.getElementById('resultsScore');
+  scoreEl.textContent = `${pct}%`;
+  scoreEl.className = 'results-score ' + (pct >= 80 ? 's-excellent' : pct >= 60 ? 's-good' : 's-poor');
+
+  const labels = { 's-excellent': 'Excellent work!', 's-good': 'Good effort — keep revising.', 's-poor': 'More practice needed.' };
+  document.getElementById('resultsLabel').textContent = `${correct} / ${total} correct — ${labels[scoreEl.className.split(' ')[1]]}`;
+  document.getElementById('statCorrect').textContent = correct;
+  document.getElementById('statWrong').textContent = wrong;
+  document.getElementById('statSkipped').textContent = skipped;
+
+  // Topic breakdown
+  const breakdown = document.getElementById('topicBreakdown');
+  const topicsShown = quizData.topics.filter(t => questions.some(q => q.topicId === t.id));
+  breakdown.innerHTML = topicsShown.map(topic => {
+    const qs = questions.filter(q => q.topicId === topic.id);
+    const ans = answers.filter(a => qs.some(q => q.id === a.questionId));
+    const c = ans.filter(a => a.correct).length;
+    const pctT = qs.length > 0 ? Math.round((c / qs.length) * 100) : 0;
+    const barClass = c === qs.length ? 'all-correct' : c === 0 ? 'none' : 'partial';
+    return `
+      <div class="topic-row">
+        <div class="topic-row-name">${topic.name}</div>
+        <div class="topic-bar-wrap">
+          <div class="topic-bar ${barClass}" style="width:${pctT}%"></div>
+        </div>
+        <div class="topic-fraction">${c}/${qs.length}</div>
+      </div>
+    `;
+  }).join('');
+
+  // Review
+  const reviewList = document.getElementById('reviewList');
+  const letters = ['A', 'B', 'C', 'D'];
+  reviewList.innerHTML = answers.map(a => {
+    const q = quizData.questions.find(q => q.id === a.questionId);
+    if (!q) return '';
+    const cls = a.correct ? 'review-correct' : 'review-wrong';
+    const yourAns = a.selected === -1 ? 'Skipped' : `${letters[a.selected]}. ${q.options[a.selected]}`;
+    const rightAns = `${letters[q.correct]}. ${q.options[q.correct]}`;
+    return `
+      <div class="review-item ${cls}">
+        <div class="review-q"><strong>Q${q.id}.</strong> ${q.question}</div>
+        <div class="review-answers">
+          ${!a.correct ? `<span class="review-your">Your answer: ${yourAns}</span><br>` : ''}
+          <span class="review-right">Correct: ${rightAns}</span>
+        </div>
+        <div class="review-explain">${q.explanation}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function goHome() {
+  clearInterval(timerInterval);
+  document.getElementById('quizScreen').style.display = 'none';
+  document.getElementById('resultsScreen').style.display = 'none';
+  document.getElementById('landingScreen').style.display = 'block';
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+loadData();
+</script>
+</body>
+</html>

@@ -1,0 +1,616 @@
+{
+  "topics": [
+    {"id": "topic1", "name": "Descriptive Analytics", "difficulty": "Easy"},
+    {"id": "topic2", "name": "Decision-Making Process", "difficulty": "Moderate"},
+    {"id": "topic3", "name": "Decision Variables vs Parameters", "difficulty": "Hard"},
+    {"id": "topic4", "name": "Fundamentals of Probability", "difficulty": "Easy"},
+    {"id": "topic5", "name": "Discrete vs Continuous Random Variables", "difficulty": "Easy"},
+    {"id": "topic6", "name": "Empirical Probability Distribution", "difficulty": "Moderate"},
+    {"id": "topic7", "name": "Valid Discrete Probability Distribution", "difficulty": "Moderate"},
+    {"id": "topic8", "name": "Standard Deviation in Business", "difficulty": "Moderate"},
+    {"id": "topic9", "name": "Binomial Distribution", "difficulty": "Moderate"},
+    {"id": "topic10", "name": "Selecting Appropriate Distribution", "difficulty": "Hard"}
+  ],
+  "questions": [
+    {
+      "id": 1,
+      "topicId": "topic1",
+      "week": 1,
+      "difficulty": "Easy",
+      "question": "Which of the following best describes descriptive analytics?",
+      "options": [
+        "Predicting future outcomes using statistical models",
+        "Recommending optimal actions based on data",
+        "Describing what has happened in the past using historical data",
+        "Identifying causal relationships between variables"
+      ],
+      "correct": 2,
+      "explanation": "Descriptive analytics uses historical data to describe past performance. It answers the question 'What happened?' Predictive analytics forecasts the future, and prescriptive analytics recommends actions."
+    },
+    {
+      "id": 2,
+      "topicId": "topic1",
+      "week": 1,
+      "difficulty": "Easy",
+      "question": "A logistics company uses an algorithm to automatically assign delivery routes that minimise total fuel cost. Which type of analytics does this represent?",
+      "options": [
+        "Descriptive analytics",
+        "Predictive analytics",
+        "Diagnostic analytics",
+        "Prescriptive analytics"
+      ],
+      "correct": 3,
+      "explanation": "Prescriptive analytics recommends an optimal action or decision. Automatically minimising fuel cost by selecting the best route is a classic prescriptive analytics application (optimisation model)."
+    },
+    {
+      "id": 3,
+      "topicId": "topic1",
+      "week": 1,
+      "difficulty": "Moderate",
+      "question": "A retail chain analyses millions of customer transactions to forecast which products each customer is likely to buy next month, then sends personalised promotions. What type of analytics is being used?",
+      "options": [
+        "Descriptive analytics",
+        "Prescriptive analytics",
+        "Predictive analytics",
+        "Diagnostic analytics"
+      ],
+      "correct": 2,
+      "explanation": "Forecasting future customer behaviour (what they will likely buy) is predictive analytics. Prescriptive analytics would go one step further and automatically decide which promotion to send to maximise revenue."
+    },
+    {
+      "id": 4,
+      "topicId": "topic1",
+      "week": 1,
+      "difficulty": "Moderate",
+      "question": "According to Davenport's analytics framework, which type of analytics provides the highest competitive advantage but is also the most difficult to implement?",
+      "options": [
+        "Descriptive analytics",
+        "Diagnostic analytics",
+        "Predictive analytics",
+        "Prescriptive analytics"
+      ],
+      "correct": 3,
+      "explanation": "Prescriptive analytics (optimisation and simulation) sits at the top of the analytics maturity model. It is the hardest to implement but delivers the greatest competitive advantage by recommending the best course of action."
+    },
+    {
+      "id": 5,
+      "topicId": "topic2",
+      "week": 1,
+      "difficulty": "Easy",
+      "question": "What is the FIRST step in the structured decision-making process outlined in the course?",
+      "options": [
+        "Determine the criteria for evaluating alternatives",
+        "Collect and analyse relevant data",
+        "Identify and define the problem",
+        "Implement the chosen solution"
+      ],
+      "correct": 2,
+      "explanation": "The five-step process begins with (1) Identify and define the problem. You cannot determine criteria, find alternatives, or analyse data until you know exactly what problem you are trying to solve."
+    },
+    {
+      "id": 6,
+      "topicId": "topic2",
+      "week": 1,
+      "difficulty": "Moderate",
+      "question": "In the five-step decision-making process, what comes IMMEDIATELY AFTER determining the criteria for evaluating alternatives?",
+      "options": [
+        "Collect data and build an analytical model",
+        "Determine the set of alternative solutions",
+        "Evaluate each alternative against the criteria",
+        "Implement and monitor the chosen alternative"
+      ],
+      "correct": 1,
+      "explanation": "The five steps are: (1) Identify problem, (2) Determine criteria, (3) Determine alternatives, (4) Evaluate alternatives, (5) Choose and implement. After step 2 (criteria), step 3 is to determine the set of alternative solutions."
+    },
+    {
+      "id": 7,
+      "topicId": "topic2",
+      "week": 1,
+      "difficulty": "Moderate",
+      "question": "Why does Business Analytics improve managerial decision-making compared to intuition-only approaches?",
+      "options": [
+        "It eliminates all uncertainty from business decisions",
+        "It relies on fact-based, data-driven analysis rather than intuition alone",
+        "It allows managers to delegate all decisions to algorithms",
+        "It guarantees the optimal outcome in every scenario"
+      ],
+      "correct": 1,
+      "explanation": "Business Analytics improves decisions by grounding them in facts and data rather than gut feeling alone. It does not eliminate uncertainty or guarantee optimal outcomes, but it provides a systematic, evidence-based foundation for decisions."
+    },
+    {
+      "id": 8,
+      "topicId": "topic2",
+      "week": 1,
+      "difficulty": "Hard",
+      "question": "A manager has: (1) identified the problem, (2) defined the evaluation criteria, and (3) listed three alternative solutions. What is the correct NEXT step?",
+      "options": [
+        "Choose and implement the best alternative immediately",
+        "Evaluate each alternative against the established criteria",
+        "Redefine the problem to include more alternatives",
+        "Collect additional data before listing alternatives"
+      ],
+      "correct": 1,
+      "explanation": "Steps completed: identify (1), criteria (2), alternatives (3). The next step is (4) Evaluate the alternatives against the criteria. Step 5 (choose and implement) follows only after evaluation is complete."
+    },
+    {
+      "id": 9,
+      "topicId": "topic3",
+      "week": 1,
+      "difficulty": "Moderate",
+      "question": "In a spreadsheet model, what is a PARAMETER?",
+      "options": [
+        "A known, fixed input value that is given or measurable",
+        "An unknown quantity the decision-maker controls",
+        "The output cell containing the objective value",
+        "A formula that links decision variables to outcomes"
+      ],
+      "correct": 0,
+      "explanation": "A parameter is a known, measurable input (e.g., fixed cost, unit price). A decision variable is the unknown quantity the manager chooses (e.g., production quantity). Good spreadsheet design keeps parameters separate from formulas."
+    },
+    {
+      "id": 10,
+      "topicId": "topic3",
+      "week": 1,
+      "difficulty": "Hard",
+      "question": "In the Nowlin Plastics model, Fixed Cost = $234,000, Variable Cost = $2/unit, Price = $3.50/unit. Which of the following is the DECISION VARIABLE?",
+      "options": [
+        "Fixed cost of $234,000",
+        "Variable cost of $2 per unit",
+        "Selling price of $3.50 per unit",
+        "Production quantity q"
+      ],
+      "correct": 3,
+      "explanation": "Fixed cost, variable cost, and selling price are all known parameters. The production quantity q is what management decides — it is the decision variable that the model optimises."
+    },
+    {
+      "id": 11,
+      "topicId": "topic3",
+      "week": 1,
+      "difficulty": "Hard",
+      "question": "Using the Nowlin Plastics profit model S(q) = 1.5q - 234,000, what does S(q) = 0 represent?",
+      "options": [
+        "The production level at maximum profit",
+        "The breakeven point where total revenue equals total cost",
+        "The point where variable cost exceeds fixed cost",
+        "The minimum production quantity for quality purposes"
+      ],
+      "correct": 1,
+      "explanation": "When S(q) = 0, revenue exactly equals total cost — this is the breakeven point. At q = 156,000 units, 1.5 × 156,000 = 234,000, so profit = 0. Below this quantity the firm makes a loss."
+    },
+    {
+      "id": 12,
+      "topicId": "topic3",
+      "week": 1,
+      "difficulty": "Moderate",
+      "question": "Which of the following is a best practice for building reliable spreadsheet models?",
+      "options": [
+        "Embed all parameter values directly inside formulas",
+        "Use a single worksheet for all inputs and calculations",
+        "Avoid using named ranges to keep the model simple",
+        "Place all parameters in a dedicated section separate from formulas"
+      ],
+      "correct": 3,
+      "explanation": "Separating parameters from formulas is a core spreadsheet modelling principle. It makes the model easier to audit, update, and understand. Embedding values inside formulas (option A) makes models fragile and hard to maintain."
+    },
+    {
+      "id": 13,
+      "topicId": "topic4",
+      "week": 2,
+      "difficulty": "Easy",
+      "question": "Which statement about probability values is correct?",
+      "options": [
+        "Probability can be any real number",
+        "Probability must be between -1 and 1",
+        "Probability must be between 0 and 1, inclusive",
+        "Probability must be greater than 0.5 to be meaningful"
+      ],
+      "correct": 2,
+      "explanation": "By definition, probability P(E) must satisfy 0 ≤ P(E) ≤ 1. A probability of 0 means the event is impossible; 1 means it is certain. Negative probabilities or values above 1 are mathematically invalid."
+    },
+    {
+      "id": 14,
+      "topicId": "topic4",
+      "week": 2,
+      "difficulty": "Easy",
+      "question": "A quality manager calculates defect probability from 10,000 historical production records. Which definition of probability is being used?",
+      "options": [
+        "Relative frequency (empirical) definition",
+        "Classical (theoretical) definition",
+        "Subjective definition",
+        "Bayesian definition"
+      ],
+      "correct": 0,
+      "explanation": "The relative frequency definition assigns probability based on observed historical data: P(E) = (number of times E occurred) / (total observations). Classical probability uses equally likely outcomes; subjective uses personal judgement."
+    },
+    {
+      "id": 15,
+      "topicId": "topic4",
+      "week": 2,
+      "difficulty": "Moderate",
+      "question": "Two fair six-sided dice are rolled. What is the probability that the sum equals 7?",
+      "options": [
+        "1/12",
+        "1/6",
+        "7/36",
+        "1/7"
+      ],
+      "correct": 1,
+      "explanation": "There are 36 equally likely outcomes. Pairs that sum to 7: (1,6),(2,5),(3,4),(4,3),(5,2),(6,1) = 6 outcomes. P(sum=7) = 6/36 = 1/6. This uses the classical (equally likely outcomes) definition of probability."
+    },
+    {
+      "id": 16,
+      "topicId": "topic4",
+      "week": 2,
+      "difficulty": "Moderate",
+      "question": "A survey finds 50% of customers like Product A and 50% like Product B. If 25% like both, what is the probability that a randomly selected customer likes AT LEAST ONE product?",
+      "options": [
+        "0.50",
+        "0.75",
+        "1.00",
+        "0.25"
+      ],
+      "correct": 1,
+      "explanation": "Using the addition rule: P(A∪B) = P(A) + P(B) - P(A∩B) = 0.50 + 0.50 - 0.25 = 0.75. This is a fundamental application of the inclusion-exclusion principle in probability."
+    },
+    {
+      "id": 17,
+      "topicId": "topic5",
+      "week": 2,
+      "difficulty": "Easy",
+      "question": "A hospital counts the number of patients admitted each day. What type of random variable is this?",
+      "options": [
+        "Discrete, because it takes only countable whole number values",
+        "Continuous, because patients can arrive at any moment",
+        "Neither, because count data is not a random variable",
+        "Continuous, because the number can be very large"
+      ],
+      "correct": 0,
+      "explanation": "The number of patients is discrete — you can have 0, 1, 2, ... patients, but not 2.7 patients. Discrete random variables take countable, isolated values. The fact that arrivals happen at any moment is about the arrival process, not the variable type."
+    },
+    {
+      "id": 18,
+      "topicId": "topic5",
+      "week": 2,
+      "difficulty": "Easy",
+      "question": "Which of the following is a CONTINUOUS random variable?",
+      "options": [
+        "Number of defective items in a batch of 100",
+        "Number of customer complaints received per week",
+        "Time (in minutes) a customer spends on a website",
+        "Number of heads in 10 coin flips"
+      ],
+      "correct": 2,
+      "explanation": "Time is continuous — it can take any value in a range (e.g., 3.142... minutes). Counts (defective items, complaints, coin flips) are discrete because they take only whole number values."
+    },
+    {
+      "id": 19,
+      "topicId": "topic5",
+      "week": 2,
+      "difficulty": "Moderate",
+      "question": "A fill machine dispenses between 0 and 12.1 ounces of liquid per container, with any value in that range equally possible. What type of random variable is the fill amount?",
+      "options": [
+        "Continuous, because it can take any value within the range 0 to 12.1",
+        "Discrete, because the range has a defined maximum",
+        "Discrete, because the machine is digital and rounds to one decimal",
+        "Neither, because the variable has a fixed upper bound"
+      ],
+      "correct": 0,
+      "explanation": "Fill amounts can take any real value in [0, 12.1], making this a continuous random variable. A defined maximum does not make a variable discrete — the key distinction is whether values are countable (discrete) or can fill an interval (continuous)."
+    },
+    {
+      "id": 20,
+      "topicId": "topic5",
+      "week": 2,
+      "difficulty": "Moderate",
+      "question": "What does the probability mass function f(x) represent for a discrete random variable X?",
+      "options": [
+        "The cumulative probability that X is less than or equal to x",
+        "The exact probability that X equals x",
+        "The average value of X over many trials",
+        "The rate of change of probability around x"
+      ],
+      "correct": 1,
+      "explanation": "f(x) = P(X = x) gives the exact probability that the discrete random variable X takes the specific value x. The cumulative version F(x) = P(X ≤ x) is different. The average value is E(x), not f(x)."
+    },
+    {
+      "id": 21,
+      "topicId": "topic6",
+      "week": 2,
+      "difficulty": "Moderate",
+      "question": "A mortgage company sampled 300 customers. The table shows: 4-year mortgages: 45 customers, 12-year: 180 customers, 24-year: 75 customers. What is the empirical probability that a randomly selected customer has a 4-year mortgage?",
+      "options": [
+        "0.10",
+        "0.15",
+        "0.25",
+        "0.45"
+      ],
+      "correct": 1,
+      "explanation": "Empirical probability = frequency / total = 45 / 300 = 0.15. This is the relative frequency definition applied to sample data to construct an empirical distribution."
+    },
+    {
+      "id": 22,
+      "topicId": "topic6",
+      "week": 2,
+      "difficulty": "Moderate",
+      "question": "What does the expected value E(x) of a discrete probability distribution represent?",
+      "options": [
+        "The most frequently occurring value in the distribution (the mode)",
+        "A probability-weighted average of all possible outcomes",
+        "The midpoint between the smallest and largest possible values",
+        "The value that divides the distribution into two equal halves (the median)"
+      ],
+      "correct": 1,
+      "explanation": "E(x) = Σx·f(x) computes a weighted average where each possible outcome is multiplied by its probability and summed. It is NOT the mode (most frequent), the midpoint of the range, or the median. For example, in the mortgage example E(x) = 13.80 years — no single customer has a 13.80-year mortgage, but it is the probability-weighted centre of the distribution."
+    },
+    {
+      "id": 23,
+      "topicId": "topic6",
+      "week": 2,
+      "difficulty": "Moderate",
+      "question": "How is an empirical probability distribution constructed?",
+      "options": [
+        "By assuming all outcomes are equally likely",
+        "By using relative frequencies calculated from observed sample data",
+        "By applying a theoretical formula such as the binomial formula",
+        "By asking domain experts to estimate probabilities subjectively"
+      ],
+      "correct": 1,
+      "explanation": "An empirical distribution is built from actual data by computing relative frequencies (count / total) for each observed value. It differs from theoretical distributions (binomial, normal) which use mathematical formulas, and from subjective probability which relies on expert judgement."
+    },
+    {
+      "id": 24,
+      "topicId": "topic6",
+      "week": 2,
+      "difficulty": "Hard",
+      "question": "Two investment portfolios both have an expected annual return of 8%. Portfolio X has a high variance; Portfolio Y has a low variance. Which conclusion is correct from a risk management perspective?",
+      "options": [
+        "Portfolio X is safer because a higher variance indicates more upside potential",
+        "Both portfolios carry identical risk since their expected returns are equal",
+        "Portfolio X is riskier because high variance means actual returns are more spread around the mean",
+        "Portfolio Y is riskier because its returns are too predictable to generate profit"
+      ],
+      "correct": 2,
+      "explanation": "Variance measures the spread of outcomes around the expected value. High variance (Portfolio X) means actual returns could deviate significantly from 8% in either direction — more uncertainty and risk. Equal expected returns do NOT imply equal risk. Portfolio Y's lower variance means outcomes cluster closer to 8%, which is less risky."
+    },
+    {
+      "id": 25,
+      "topicId": "topic7",
+      "week": 2,
+      "difficulty": "Moderate",
+      "question": "Which of the following sets of probabilities forms a VALID discrete probability distribution?",
+      "options": [
+        "f(1)=0.2, f(2)=0.3, f(3)=0.4",
+        "f(1)=0.5, f(2)=-0.2, f(3)=0.7",
+        "f(1)=0.3, f(2)=0.5, f(3)=0.2",
+        "f(1)=0.4, f(2)=0.4, f(3)=0.4"
+      ],
+      "correct": 2,
+      "explanation": "Option C: all values ≥ 0 and sum = 0.3+0.5+0.2 = 1.0. Valid. Option A sums to 0.9 (invalid). Option B has a negative value (invalid). Option D sums to 1.2 (invalid)."
+    },
+    {
+      "id": 26,
+      "topicId": "topic7",
+      "week": 2,
+      "difficulty": "Moderate",
+      "question": "What are the TWO required conditions for a valid discrete probability distribution?",
+      "options": [
+        "f(x) ≥ 0 for all x, and Σf(x) = 1",
+        "f(x) > 0 for all x, and Σf(x) = 1",
+        "f(x) ≥ 0 for all x, and Σf(x) ≤ 1",
+        "f(x) = 1/n for all x, and Σf(x) = 1"
+      ],
+      "correct": 0,
+      "explanation": "The two conditions are: (1) f(x) ≥ 0 — no negative probabilities, and (2) Σf(x) = 1 — all probabilities sum to exactly 1. Note f(x) ≥ 0 (not strictly > 0), so zero probability values are allowed."
+    },
+    {
+      "id": 27,
+      "topicId": "topic7",
+      "week": 2,
+      "difficulty": "Hard",
+      "question": "A data analyst proposes this probability distribution for customer satisfaction scores (1, 2, 3): f(1)=0.40, f(2)=0.35, f(3)=0.35. Is this a valid distribution?",
+      "options": [
+        "Yes, all values are non-negative",
+        "Yes, values are reasonable for a satisfaction scale",
+        "No, the probabilities are not equal for all outcomes",
+        "No, the probabilities sum to 1.10, not 1.0"
+      ],
+      "correct": 3,
+      "explanation": "Sum = 0.40 + 0.35 + 0.35 = 1.10 ≠ 1.0. This violates the second condition (Σf(x) = 1), so it is NOT a valid probability distribution. The fact that all values are non-negative satisfies condition 1, but both conditions must hold."
+    },
+    {
+      "id": 28,
+      "topicId": "topic7",
+      "week": 2,
+      "difficulty": "Moderate",
+      "question": "A retailer models daily demand with: f(0)=0.10, f(1)=0.25, f(2)=0.40, f(3)=0.25. Is this a valid probability distribution?",
+      "options": [
+        "No, because f(0) = 0.10 is too small",
+        "No, because demand cannot be modelled with four values only",
+        "Yes, all values are non-negative and the sum equals 1.0",
+        "Yes, but only if demand follows a normal distribution"
+      ],
+      "correct": 2,
+      "explanation": "Check: all f(x) ≥ 0 (condition 1 satisfied). Sum = 0.10+0.25+0.40+0.25 = 1.00 (condition 2 satisfied). Both conditions hold, so this is a valid discrete probability distribution. The number of values and shape do not matter as long as the two conditions are met."
+    },
+    {
+      "id": 29,
+      "topicId": "topic8",
+      "week": 2,
+      "difficulty": "Moderate",
+      "question": "Why is standard deviation often preferred over variance when communicating results to a non-technical business audience?",
+      "options": [
+        "Standard deviation is always a larger number, making differences more visible",
+        "Standard deviation is expressed in the same units as the original data, making it easier to interpret",
+        "Standard deviation requires no mathematical formula, unlike variance",
+        "Standard deviation is always equal to half the range of the data"
+      ],
+      "correct": 1,
+      "explanation": "σ = √Var(x) converts the squared units of variance back to the original units. If sales data is measured in dollars, variance is in dollars² (hard to interpret intuitively), but standard deviation is back in dollars — a meaningful, directly comparable measure of spread. This is why business reports typically quote standard deviation rather than variance."
+    },
+    {
+      "id": 30,
+      "topicId": "topic8",
+      "week": 2,
+      "difficulty": "Moderate",
+      "question": "A manufacturing manager uses standard deviation of product weight to make decisions. What is the PRIMARY business use of standard deviation here?",
+      "options": [
+        "To calculate the average weight of products",
+        "To predict the exact weight of the next item produced",
+        "To set quality control thresholds and identify unusual variation",
+        "To determine the total production volume for the week"
+      ],
+      "correct": 2,
+      "explanation": "Standard deviation measures spread/variability. In manufacturing QC, it is used to set control limits (e.g., ±3σ) and flag products that deviate unusually from the mean. It does not calculate averages (that is the mean) or predict exact values."
+    },
+    {
+      "id": 31,
+      "topicId": "topic8",
+      "week": 2,
+      "difficulty": "Moderate",
+      "question": "Fund A has E(return)=8%, σ=2%. Fund B has E(return)=8%, σ=12%. For a risk-averse investor, which fund is preferable and why?",
+      "options": [
+        "Fund A, because lower standard deviation means less variability (lower risk)",
+        "Fund B, because higher standard deviation means higher potential upside",
+        "Neither, because both funds have the same expected return",
+        "Fund B, because standard deviation above 10% signals market confidence"
+      ],
+      "correct": 0,
+      "explanation": "Both funds have the same expected return of 8%, but Fund A has σ=2% versus Fund B's σ=12%. Standard deviation measures risk (variability). A risk-averse investor prefers less variability, so Fund A is preferred. Higher σ means higher risk, not higher guaranteed returns."
+    },
+    {
+      "id": 32,
+      "topicId": "topic8",
+      "week": 3,
+      "difficulty": "Hard",
+      "question": "Weekly sales are normally distributed with μ=200 and σ=30. Using the empirical rule, approximately what percentage of weeks will have sales between 140 and 260?",
+      "options": [
+        "68.3%",
+        "95.4%",
+        "99.7%",
+        "50.0%"
+      ],
+      "correct": 1,
+      "explanation": "140 = 200 - 2(30) = μ - 2σ, and 260 = 200 + 2(30) = μ + 2σ. The empirical rule states approximately 95.4% of observations fall within μ ± 2σ. The ranges are: ±1σ ≈ 68.3%, ±2σ ≈ 95.4%, ±3σ ≈ 99.7%."
+    },
+    {
+      "id": 33,
+      "topicId": "topic9",
+      "week": 3,
+      "difficulty": "Moderate",
+      "question": "Which scenario is BEST modelled by a binomial distribution?",
+      "options": [
+        "Number of customers arriving at a bank per hour",
+        "Time (in minutes) until the next support ticket arrives",
+        "Number of customers (out of 50 email recipients) who make a purchase",
+        "Daily revenue, which can range from $0 to $10,000"
+      ],
+      "correct": 2,
+      "explanation": "Binomial requires: fixed n trials, two outcomes per trial (buy/not buy), constant probability p, independence. '50 email recipients, each buys or not' fits perfectly. Customer arrivals per hour = Poisson. Time until next event = Exponential. Continuous revenue = normal/continuous."
+    },
+    {
+      "id": 34,
+      "topicId": "topic9",
+      "week": 3,
+      "difficulty": "Moderate",
+      "question": "What are the TWO key properties that must hold for a binomial distribution to be appropriate?",
+      "options": [
+        "Trials are independent AND probability of success is constant across trials",
+        "Trials are dependent AND the sample size is large",
+        "The variable is continuous AND trials are equally likely",
+        "The mean equals the variance AND all outcomes are binary"
+      ],
+      "correct": 0,
+      "explanation": "Binomial distribution requires: (1) independence between trials, and (2) constant probability of success p for every trial. Fixed n and binary outcomes are also needed, but among these options, independence + constant p is the defining pair."
+    },
+    {
+      "id": 35,
+      "topicId": "topic9",
+      "week": 3,
+      "difficulty": "Moderate",
+      "question": "In the binomial formula f(x) = C(n,x) · p^x · (1-p)^(n-x), what does the term C(n,x) represent?",
+      "options": [
+        "The probability of exactly x successes in one specific sequence",
+        "The cumulative probability up to x successes",
+        "The number of ways to arrange x successes among n trials",
+        "The expected number of successes"
+      ],
+      "correct": 2,
+      "explanation": "C(n,x) = n! / [x!(n-x)!] is the combination formula — it counts how many different orderings of x successes can occur in n trials. Multiplying by p^x·(1-p)^(n-x) gives the probability of any one specific sequence, and C(n,x) accounts for all sequences."
+    },
+    {
+      "id": 36,
+      "topicId": "topic9",
+      "week": 3,
+      "difficulty": "Hard",
+      "question": "A call centre finds that 25% of calls result in a sale, and all calls are independent. For a batch of 12 calls, which statement about the binomial distribution is correct?",
+      "options": [
+        "The expected number of sales is 3, since E(x) = n·p = 12 × 0.25",
+        "The expected number of sales is 0.25, since E(x) equals the probability of success",
+        "The binomial model is invalid here because p = 0.25 is not a whole number",
+        "The expected number of sales cannot be determined without historical call data"
+      ],
+      "correct": 0,
+      "explanation": "For a binomial distribution, E(x) = n·p. With n=12 calls and p=0.25, E(x) = 12 × 0.25 = 3 expected sales. Option B confuses p with E(x). Option C is wrong — p can be any value between 0 and 1. Option D is wrong — E(x) = np requires only n and p, not raw historical data."
+    },
+    {
+      "id": 37,
+      "topicId": "topic10",
+      "week": 3,
+      "difficulty": "Hard",
+      "question": "A project manager estimates a task will take between 4 and 16 weeks, with 8 weeks being the most likely duration. Only limited expert judgment data is available. Which distribution is MOST appropriate?",
+      "options": [
+        "Normal distribution, because duration clusters around a central value",
+        "Exponential distribution, because it models waiting times",
+        "Triangular distribution, because it needs only minimum, maximum, and mode",
+        "Binomial distribution, because there are two outcomes (on time or late)"
+      ],
+      "correct": 2,
+      "explanation": "The triangular distribution is designed for situations with limited data where you can specify minimum, maximum, and most likely (mode) values. Normal requires mean and variance from data; exponential models time between events; binomial requires binary outcomes."
+    },
+    {
+      "id": 38,
+      "topicId": "topic10",
+      "week": 3,
+      "difficulty": "Hard",
+      "question": "A hospital averages 10 patient arrivals per hour. A manager wants to find the probability of EXACTLY 8 arrivals in one hour. Which distribution should be used?",
+      "options": [
+        "Normal distribution with μ=10",
+        "Binomial distribution with p=0.10",
+        "Poisson distribution with μ=10",
+        "Exponential distribution with mean=10"
+      ],
+      "correct": 2,
+      "explanation": "Poisson models the COUNT of events occurring in a fixed time interval, given a known average rate. Here: counting arrivals (discrete count) in a fixed interval (one hour) with known mean μ=10. In Excel: =POISSON.DIST(8,10,FALSE)."
+    },
+    {
+      "id": 39,
+      "topicId": "topic10",
+      "week": 3,
+      "difficulty": "Hard",
+      "question": "A bank analyst wants to model the TIME (in days) between consecutive loan defaults. Which distribution is MOST appropriate?",
+      "options": [
+        "Normal distribution",
+        "Binomial distribution",
+        "Poisson distribution",
+        "Exponential distribution"
+      ],
+      "correct": 3,
+      "explanation": "Exponential distribution models the time BETWEEN events in a Poisson process. If defaults occur as a Poisson process (count of defaults per period), then the waiting time between defaults follows an exponential distribution. In Excel: =EXPON.DIST(x, 1/mean, TRUE)."
+    },
+    {
+      "id": 40,
+      "topicId": "topic10",
+      "week": 3,
+      "difficulty": "Hard",
+      "question": "A retailer has 10 years of daily sales data. The data is symmetric, bell-shaped, and clusters around a clear central value. Which distribution is MOST appropriate for modelling daily sales?",
+      "options": [
+        "Triangular distribution",
+        "Normal distribution",
+        "Poisson distribution",
+        "Discrete uniform distribution"
+      ],
+      "correct": 1,
+      "explanation": "Normal distribution is appropriate for continuous data that is symmetric and bell-shaped around a mean. Large historical datasets with a clear central tendency and symmetric spread are the classic normal distribution use case. Triangular = limited data; Poisson = count of events; discrete uniform = equal probability for each of n outcomes."
+    }
+  ]
+}

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>R Practice · BUSINFO 700</title>
+  <meta property="og:title" content="UoA MBusAn · Analytics Practice">
+  <meta property="og:description" content="For Business Analytics Cohort 8">
+  <meta property="og:image" content="https://kyungho-kyle-park.github.io/businfo700-r-practice/1744667894355.jpg">
+  <meta property="og:url" content="https://kyungho-kyle-park.github.io/businfo700-r-practice/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/eclipse.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-W98S7G9M');</script>
+  <!-- End Google Tag Manager -->
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W98S7G9M"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<!-- Password Modal -->
+<div id="pwd-modal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="modal-logo">🎓</div>
+    <h2>Analytics Practice</h2>
+    <p class="modal-sub">BUSINFO 700 &nbsp;·&nbsp; University of Auckland</p>
+    <form id="pwd-form">
+      <input type="password" id="pwd-input" placeholder="Enter password"
+             autocomplete="off" autocapitalize="off" spellcheck="false">
+      <button type="submit" class="btn-primary" style="justify-content:center">Unlock →</button>
+    </form>
+    <p id="pwd-error" class="error-msg"></p>
+    <p class="modal-notice">Created exclusively for UoA MBusAn Cohort 8 · Educational use only · All data is fictional.<br>Enquiries: <a href="mailto:kpar364@aucklanduni.ac.nz">kpar364@aucklanduni.ac.nz</a></p>
+  </div>
+</div>
+
+<!-- Loading Screen -->
+<div id="loading-screen" class="loading-overlay hidden">
+  <div class="loading-content">
+    <div class="spinner"></div>
+    <h3>Initialising R Engine</h3>
+    <p id="load-status">Downloading WebAssembly R — first load takes 20–60s…</p>
+  </div>
+</div>
+
+<!-- Main App -->
+<div id="app" class="app-shell hidden">
+
+  <header class="app-header">
+    <div class="header-left">
+      <button id="hamburger" class="hamburger-btn" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="header-brand">
+        <span class="brand-title">Analytics Practice</span>
+        <span class="brand-sub">UoA BUSINFO 700</span>
+      </div>
+    </div>
+    <div class="header-center">
+      <div class="header-brand-center">
+        <span class="brand-title-center">Analytics Practice</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <a href="index.html" class="mcq-link-btn">← Home</a>
+      <div id="webrStatus" class="webrStatus">
+        <span class="status-dot loading"></span>
+        <span class="status-text">Loading R…</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="notice-bar">
+    This site is created exclusively for UoA Master of Business Analytics Cohort 8 · BUSINFO 700 R practice · All data is fictional. Enquiries: <a href="mailto:kpar364@aucklanduni.ac.nz">kpar364@aucklanduni.ac.nz</a>
+  </div>
+
+  <div class="app-body">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-inner">
+        <div id="sidebar-content"></div>
+      </div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <main class="main-panel">
+      <div id="welcome-state" class="welcome-state">
+        <div class="welcome-icon">📊</div>
+        <h2>Select a Question</h2>
+        <p>Choose a topic from the sidebar to start practising</p>
+      </div>
+
+      <div id="question-view" class="question-view hidden">
+
+        <div class="question-header">
+          <div class="question-meta">
+            <span class="q-badge" id="q-badge">W1 · Q1</span>
+            <span class="q-type-badge r-type" id="q-type">R</span>
+          </div>
+          <h2 id="q-title">Question</h2>
+        </div>
+
+        <!-- Row 1: Scenario (full width) -->
+        <div class="scenario-panel">
+          <div class="panel-header">
+            <span class="panel-icon">📋</span>
+            <span class="panel-label">Scenario</span>
+          </div>
+          <div class="panel-body">
+            <div id="q-scenario" class="scenario-content"></div>
+          </div>
+        </div>
+
+        <!-- Row 2: Task | Environment (side by side) -->
+        <div class="q-mid-row">
+          <div class="task-panel">
+            <div class="panel-header">
+              <span class="panel-icon">🎯</span>
+              <span class="panel-label">Task</span>
+            </div>
+            <div class="panel-body">
+              <div id="q-task" class="task-content"></div>
+            </div>
+          </div>
+
+          <div class="env-panel" id="env-panel">
+            <div class="panel-header">
+              <span class="panel-icon">🔍</span>
+              <span class="panel-label">Environment</span>
+            </div>
+            <div class="env-panel-body">
+              <div id="env-content" class="env-content">
+                <span class="env-placeholder">Run code to inspect variables…</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 3: Code Editor | Output (side by side) -->
+        <div class="code-area">
+          <div class="editor-section">
+            <div class="section-header">
+              <span class="section-label">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                Code Editor
+              </span>
+              <div class="editor-actions">
+                <button id="clear-btn" class="btn-ghost btn-sm">Clear</button>
+                <button id="run-btn" class="btn-primary btn-run">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+                  Run
+                </button>
+              </div>
+            </div>
+            <div id="editor-container"></div>
+          </div>
+
+          <div class="console-section">
+            <div class="section-header">
+              <span class="section-label">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                Output
+              </span>
+              <button id="clear-console-btn" class="btn-ghost btn-sm">Clear</button>
+            </div>
+            <div id="console-output" class="console-output">
+              <span class="console-placeholder">Run your code to see output here…</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 4: Expected Output (full width) -->
+        <div class="expected-panel" id="expected-panel">
+          <div class="panel-header">
+            <span class="panel-icon">💻</span>
+            <span class="panel-label">Expected Output</span>
+          </div>
+          <div class="panel-body">
+            <pre id="q-expected" class="expected-output"></pre>
+          </div>
+        </div>
+
+        <!-- Row 5: Solution -->
+        <div class="solution-section">
+          <button id="show-solution-btn" class="btn-solution">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span id="solution-btn-text">Show Solution</span>
+          </button>
+          <div id="solution-panel" class="solution-panel hidden">
+            <div class="section-header">
+              <span class="section-label">✅ Solution</span>
+              <button id="copy-solution-btn" class="btn-ghost btn-sm">Copy</button>
+            </div>
+            <div id="solution-code"></div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/r/r.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/matchbrackets.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
