@@ -218,7 +218,7 @@ function renderSidebar() {
                   if (locked)                statusHtml = '<span class="q-status locked">🔒</span>';
                   else if (status === 'done')    statusHtml = '<span class="q-status done">✓</span>';
                   else if (status === 'tried')   statusHtml = '<span class="q-status tried">△</span>';
-                  else if (status === 'skipped') statusHtml = '<span class="q-status skipped">✕</span>';
+                  // skipped: no indicator
                   return `
                     <li class="q-item ${active ? 'active' : ''} ${locked ? 'locked-item' : ''} ${status === 'done' && !active ? 'done' : ''}"
                         data-id="${q.id}" tabindex="${locked ? -1 : 0}" role="button">
