@@ -417,6 +417,7 @@
   </div>
 
   <div class="quiz-actions">
+    <button class="btn btn-secondary" id="prevBtn" onclick="prevQuestion()" style="display:none">← Previous</button>
     <button class="btn btn-secondary" id="skipBtn" onclick="nextQuestion()">Skip</button>
     <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none">Next Question</button>
   </div>
@@ -465,7 +466,7 @@ let currentMode = 'practice';
 let questions = [];
 let currentIndex = 0;
 let score = 0;
-let answers = []; // {questionId, selected, correct}
+let answers = {}; // {[index]: {questionId, selected, correct}}
 let timerInterval = null;
 let timeLeft = 0;
 let answered = false;
@@ -494,7 +495,7 @@ function renderTopicList() {
 function startQuiz(mode) {
   currentMode = mode;
   score = 0;
-  answers = [];
+  answers = {};
   currentIndex = 0;
 
   if (mode === 'practice') {
@@ -568,8 +569,47 @@ function renderQuestion() {
   fp.style.display = 'none';
   fp.className = 'feedback-panel';
 
-  document.getElementById('skipBtn').style.display = 'inline-block';
-  document.getElementById('nextBtn').style.display = 'none';
+  // Previous button visibility
+  document.getElementById('prevBtn').style.display = currentIndex > 0 ? 'inline-block' : 'none';
+
+  // Restore previously answered state if returning to this question
+  const prev = answers[currentIndex];
+  if (prev) {
+    answered = true;
+    const isCorrect = prev.correct;
+    for (let i = 0; i < q.options.length; i++) {
+      const btn = document.getElementById(`opt${i}`);
+      btn.disabled = true;
+      if (i === q.correct) btn.classList.add('show-correct');
+      if (i === prev.selected && !isCorrect) btn.classList.add('selected-wrong');
+      if (i === prev.selected && isCorrect) {
+        btn.classList.remove('show-correct');
+        btn.classList.add('selected-correct');
+      }
+    }
+    fp.style.display = 'block';
+    const fh = document.getElementById('feedbackHeader');
+    const ft = document.getElementById('feedbackText');
+    if (isCorrect) {
+      fp.classList.add('correct');
+      fh.textContent = 'Correct!';
+      fh.className = 'feedback-header correct';
+    } else if (prev.selected === -1) {
+      fp.classList.add('wrong');
+      fh.textContent = `Skipped. The correct answer is ${letters[q.correct]}.`;
+      fh.className = 'feedback-header wrong';
+    } else {
+      fp.classList.add('wrong');
+      fh.textContent = `Incorrect. The correct answer is ${letters[q.correct]}.`;
+      fh.className = 'feedback-header wrong';
+    }
+    ft.textContent = q.explanation;
+    document.getElementById('skipBtn').style.display = 'none';
+    document.getElementById('nextBtn').style.display = 'inline-block';
+  } else {
+    document.getElementById('skipBtn').style.display = 'inline-block';
+    document.getElementById('nextBtn').style.display = 'none';
+  }
 }
 
 function selectOption(selectedIdx) {
@@ -579,10 +619,9 @@ function selectOption(selectedIdx) {
   const q = questions[currentIndex];
   const isCorrect = selectedIdx === q.correct;
 
-  if (isCorrect) score++;
+  answers[currentIndex] = { questionId: q.id, selected: selectedIdx, correct: isCorrect };
+  score = Object.values(answers).filter(a => a.correct).length;
   document.getElementById('scoreNum').textContent = score;
-
-  answers.push({ questionId: q.id, selected: selectedIdx, correct: isCorrect });
 
   // Style buttons
   for (let i = 0; i < q.options.length; i++) {
@@ -619,12 +658,18 @@ function selectOption(selectedIdx) {
 
 function nextQuestion() {
   if (!answered) {
-    // skipped
     const q = questions[currentIndex];
-    answers.push({ questionId: q.id, selected: -1, correct: false });
+    answers[currentIndex] = { questionId: q.id, selected: -1, correct: false };
   }
   currentIndex++;
   renderQuestion();
+}
+
+function prevQuestion() {
+  if (currentIndex > 0) {
+    currentIndex--;
+    renderQuestion();
+  }
 }
 
 function updateTimer() {
@@ -643,8 +688,9 @@ function showResults() {
   document.getElementById('resultsScreen').style.display = 'block';
 
   const total = questions.length;
-  const correct = answers.filter(a => a.correct).length;
-  const skipped = answers.filter(a => a.selected === -1).length;
+  const answerList = Object.values(answers);
+  const correct = answerList.filter(a => a.correct).length;
+  const skipped = answerList.filter(a => a.selected === -1).length;
   const wrong = total - correct - skipped;
   const pct = Math.round((correct / total) * 100);
 
@@ -663,7 +709,7 @@ function showResults() {
   const topicsShown = quizData.topics.filter(t => questions.some(q => q.topicId === t.id));
   breakdown.innerHTML = topicsShown.map(topic => {
     const qs = questions.filter(q => q.topicId === topic.id);
-    const ans = answers.filter(a => qs.some(q => q.id === a.questionId));
+    const ans = answerList.filter(a => qs.some(q => q.id === a.questionId));
     const c = ans.filter(a => a.correct).length;
     const pctT = qs.length > 0 ? Math.round((c / qs.length) * 100) : 0;
     const barClass = c === qs.length ? 'all-correct' : c === 0 ? 'none' : 'partial';
@@ -681,7 +727,7 @@ function showResults() {
   // Review
   const reviewList = document.getElementById('reviewList');
   const letters = ['A', 'B', 'C', 'D'];
-  reviewList.innerHTML = answers.map(a => {
+  reviewList.innerHTML = answerList.map(a => {
     const q = quizData.questions.find(q => q.id === a.questionId);
     if (!q) return '';
     const cls = a.correct ? 'review-correct' : 'review-wrong';
